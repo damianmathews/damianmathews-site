@@ -316,14 +316,306 @@
 
   a, button { cursor: none; }
   @media (max-width: 900px) { a, button { cursor: pointer; } }
+
+  /* ============================================================
+     V2 — VISUAL OVERHAUL
+     Source-order overrides for the rules above.
+     ============================================================ */
+
+  /* Fix italic descender clipping ('g' in running, 'f' in itself).
+     Adds vertical room for descenders, negative margin keeps layout. */
+  h1 { line-height: 1.02; padding-bottom: 0.06em; }
+  h1 .reveal-word {
+    padding: 0.06em 0.05em 0.28em;
+    margin: -0.06em -0.05em -0.22em;
+  }
+
+  /* Use small viewport units so mobile chrome bars don't crop hero */
+  .hero { min-height: 100vh; min-height: 100svh; padding: 130px 0 110px; }
+  @media (max-height: 820px) {
+    .hero { padding: 120px 0 70px; }
+    .hero-meta { margin-bottom: 36px; }
+    h1 { margin-bottom: 36px; font-size: clamp(40px, 7vw, 96px); }
+    .hero-sub { margin-bottom: 36px; }
+  }
+
+  /* SCROLL PROGRESS BAR */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px; z-index: 9999;
+    background: linear-gradient(to right, var(--copper), var(--copper-bright));
+    box-shadow: 0 0 16px rgba(219, 111, 44, 0.6);
+    transform-origin: left;
+    transform: scaleX(0);
+    will-change: transform;
+  }
+
+  /* MESH GRADIENT BACKDROP — replaces flat .ambient with multi-blob */
+  .ambient { display: none; }
+  .mesh {
+    position: fixed; inset: 0; pointer-events: none;
+    z-index: 0; overflow: hidden;
+  }
+  .mesh-blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(90px); opacity: 0.7;
+    will-change: transform;
+  }
+  .mesh-1 {
+    top: -15%; left: -10%;
+    width: 55vw; height: 55vw;
+    background: radial-gradient(circle, rgba(219, 111, 44, 0.20), transparent 65%);
+    animation: meshDriftA 28s ease-in-out infinite;
+  }
+  .mesh-2 {
+    top: 40%; right: -15%;
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, rgba(190, 72, 30, 0.16), transparent 65%);
+    animation: meshDriftB 36s ease-in-out infinite;
+  }
+  .mesh-3 {
+    bottom: -20%; left: 30%;
+    width: 50vw; height: 50vw;
+    background: radial-gradient(circle, rgba(133, 60, 22, 0.18), transparent 65%);
+    animation: meshDriftC 44s ease-in-out infinite;
+  }
+  @keyframes meshDriftA {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(8vw, 6vh) scale(1.1); }
+  }
+  @keyframes meshDriftB {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(-6vw, -8vh) scale(0.92); }
+  }
+  @keyframes meshDriftC {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-5vw, 4vh) scale(1.06); }
+    66% { transform: translate(5vw, -4vh) scale(0.94); }
+  }
+
+  /* HERO — make room for orb on right, ensure layered correctly */
+  .hero { position: relative; overflow: hidden; }
+  .hero .wrap { position: relative; z-index: 2; }
+  .hero h1 { max-width: min(1100px, 92vw); }
+
+  /* HERO ORB — atmospheric 3D-feel centerpiece */
+  .hero-orb {
+    position: absolute;
+    top: 50%; right: -12vw;
+    transform: translate(0, -50%);
+    width: 62vw; aspect-ratio: 1 / 1;
+    max-width: 720px;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    animation: orbEnter 1.8s var(--easing-out) 1.2s forwards;
+    --px: 0; --py: 0;
+  }
+  @keyframes orbEnter { to { opacity: 0.85; } }
+
+  .orb-stage {
+    position: absolute; inset: 0;
+    transform: translate3d(calc(var(--px) * 18px), calc(var(--py) * 18px), 0);
+    transition: transform 0.4s var(--easing-out);
+  }
+
+  .orb-core {
+    position: absolute; inset: 30%;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 32% 28%,
+        rgba(255, 200, 140, 0.55) 0%,
+        rgba(219, 111, 44, 0.55) 18%,
+        rgba(120, 50, 18, 0.7) 50%,
+        rgba(20, 10, 4, 0.98) 92%);
+    box-shadow:
+      inset -34px -44px 110px rgba(0, 0, 0, 0.85),
+      inset 34px 34px 100px rgba(255, 180, 100, 0.18),
+      0 0 100px rgba(219, 111, 44, 0.4),
+      0 0 220px rgba(219, 111, 44, 0.18);
+    animation: orbBreath 9s ease-in-out infinite;
+  }
+  @keyframes orbBreath {
+    0%, 100% { transform: scale(1); filter: brightness(1) saturate(1); }
+    50% { transform: scale(1.045); filter: brightness(1.12) saturate(1.1); }
+  }
+
+  .orb-glow {
+    position: absolute; inset: 24%;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 111, 44, 0.30), transparent 70%);
+    filter: blur(40px);
+    animation: orbBreath 6s ease-in-out infinite;
+  }
+
+  .orb-ring {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(219, 111, 44, 0.18);
+  }
+  .orb-ring.r1 { animation: orbSpin 36s linear infinite; }
+  .orb-ring.r2 {
+    inset: 9%;
+    border-color: rgba(219, 111, 44, 0.13);
+    border-style: dashed;
+    animation: orbSpin 24s linear infinite reverse;
+  }
+  .orb-ring.r3 {
+    inset: 18%;
+    border-color: rgba(219, 111, 44, 0.09);
+    animation: orbSpin 48s linear infinite;
+  }
+  .orb-arc {
+    position: absolute; inset: -4%;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: rgba(219, 111, 44, 0.45);
+    border-right-color: rgba(219, 111, 44, 0.18);
+    animation: orbSpin 14s linear infinite;
+  }
+  .orb-arc-2 {
+    position: absolute; inset: 4%;
+    border-radius: 50%;
+    border: 1px solid transparent;
+    border-bottom-color: rgba(240, 133, 62, 0.55);
+    border-left-color: rgba(240, 133, 62, 0.15);
+    animation: orbSpin 20s linear infinite reverse;
+  }
+  @keyframes orbSpin { to { transform: rotate(360deg); } }
+
+  /* Orbiting particles — wrapper rotates, dot offset by % of orb size via cqw */
+  .hero-orb { container-type: inline-size; }
+  .orb-orbit {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .orb-orbit .dot {
+    position: relative;
+    width: 6px; height: 6px;
+    background: var(--copper-bright);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--copper-bright), 0 0 28px var(--copper);
+  }
+  .orb-orbit.o1 { animation: orbSpin 26s linear infinite; }
+  .orb-orbit.o1 .dot { transform: translateX(45cqw); }
+  .orb-orbit.o2 { animation: orbSpin 38s linear infinite reverse; }
+  .orb-orbit.o2 .dot { width: 4px; height: 4px; transform: translateX(38cqw); opacity: 0.8; }
+  .orb-orbit.o3 { animation: orbSpin 52s linear infinite; }
+  .orb-orbit.o3 .dot { width: 8px; height: 8px; transform: translateX(52cqw); opacity: 0.75; }
+  .orb-orbit.o4 { animation: orbSpin 30s linear infinite reverse; }
+  .orb-orbit.o4 .dot { width: 3px; height: 3px; transform: translateX(56cqw); opacity: 0.6; }
+
+  /* Subtle scan line across orb */
+  .orb-scan {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(180deg, transparent 48%, rgba(240, 133, 62, 0.12) 50%, transparent 52%);
+    mix-blend-mode: screen;
+    animation: orbScan 7s ease-in-out infinite;
+  }
+  @keyframes orbScan {
+    0%, 100% { transform: translateY(-12%); opacity: 0; }
+    50% { transform: translateY(12%); opacity: 1; }
+  }
+
+  @media (max-width: 1180px) {
+    .hero-orb { right: -28vw; width: 75vw; animation: orbEnterDim 1.8s var(--easing-out) 1.2s forwards; }
+    @keyframes orbEnterDim { to { opacity: 0.4; } }
+  }
+  @media (max-width: 720px) {
+    .hero-orb { display: none; }
+  }
+
+  /* MAGNETIC BUTTON FEEL — slight float on hover, deeper shadow */
+  .btn-primary {
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 12px 40px rgba(219, 111, 44, 0.25);
+    transition: transform 0.3s var(--easing-out), box-shadow 0.3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.4), 0 18px 60px rgba(219, 111, 44, 0.45);
+  }
+  .btn-ghost { transition: all 0.3s var(--easing-out); }
+  .btn-ghost:hover { transform: translateY(-2px); }
+
+  /* CAPABILITY CARD GLOW ON HOVER */
+  .capability { transition: background 0.3s ease, transform 0.4s var(--easing-out); }
+  .capability:hover { transform: translateY(-3px); }
+  .capability:hover .capability-icon { filter: drop-shadow(0 0 14px rgba(219, 111, 44, 0.55)); }
+
+  /* SERVICE ROW DEPTH */
+  .service { will-change: transform; }
+
+  /* THESIS NUMBER TREATMENT — gradient fill */
+  .thesis-stat-num {
+    background: linear-gradient(135deg, var(--copper-bright) 0%, var(--copper) 60%, #8a4419 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-variant-numeric: tabular-nums;
+    font-weight: 400;
+  }
+
+  /* PROCESS MARKER — soft inner glow when active section visible */
+  .process-step:hover .process-marker {
+    box-shadow: 0 0 0 6px rgba(219, 111, 44, 0.08), 0 0 28px rgba(219, 111, 44, 0.3);
+  }
+
+  /* SECTION TOP-EDGE GLOW — adds depth between sections */
+  section { position: relative; }
+  section::before {
+    content: ''; position: absolute; top: 0; left: 50%;
+    width: min(420px, 60vw); height: 1px;
+    background: linear-gradient(to right, transparent, var(--copper), transparent);
+    transform: translateX(-50%);
+    opacity: 0.45;
+  }
+
+  /* CALENDLY WRAPPER — frame upgrade */
+  .calendly-wrap {
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--rule);
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+  }
+
+  /* SPECTRUM POLISH */
+  .spectrum {
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  }
+
+  /* TICKER — refine spacing + edge fade */
+  .ticker { position: relative; }
+  .ticker::before, .ticker::after {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 80px;
+    pointer-events: none; z-index: 2;
+  }
+  .ticker::before { left: 0; background: linear-gradient(to right, var(--bg), transparent); }
+  .ticker::after { right: 0; background: linear-gradient(to left, var(--bg), transparent); }
+
+  /* NAV — slight elevation on scroll-touch */
+  nav { box-shadow: 0 1px 0 rgba(255, 255, 255, 0.02); }
+
+  /* Reduced motion — switch off heavy animations */
+  @media (prefers-reduced-motion: reduce) {
+    .orb-core, .orb-glow, .orb-ring, .orb-arc, .orb-arc-2, .orb-orbit,
+    .mesh-blob, .ticker-track, .orb-scan { animation: none !important; }
+    .hero-orb { opacity: 0.3 !important; }
+    h1 .reveal-word span { transform: translateY(0) !important; animation: none !important; }
+  }
 </style>
 </head>
 <body>
 
+<div class="scroll-progress" id="scrollProgress"></div>
 <div class="cursor"></div>
 <div class="cursor-ring"></div>
 <div class="grain"></div>
-<div class="ambient"></div>
+<div class="mesh" aria-hidden="true">
+  <div class="mesh-blob mesh-1"></div>
+  <div class="mesh-blob mesh-2"></div>
+  <div class="mesh-blob mesh-3"></div>
+</div>
 
 <nav>
   <div class="wrap">
@@ -338,6 +630,22 @@
 </nav>
 
 <header class="hero">
+  <div class="hero-orb" aria-hidden="true">
+    <div class="orb-stage" id="orbStage">
+      <div class="orb-glow"></div>
+      <div class="orb-ring r1"></div>
+      <div class="orb-ring r2"></div>
+      <div class="orb-ring r3"></div>
+      <div class="orb-arc"></div>
+      <div class="orb-arc-2"></div>
+      <div class="orb-core"></div>
+      <div class="orb-scan"></div>
+      <div class="orb-orbit o1"><span class="dot"></span></div>
+      <div class="orb-orbit o2"><span class="dot"></span></div>
+      <div class="orb-orbit o3"><span class="dot"></span></div>
+      <div class="orb-orbit o4"><span class="dot"></span></div>
+    </div>
+  </div>
   <div class="wrap">
     <div class="hero-meta">
       <span class="pin">
@@ -922,6 +1230,53 @@
     });
   }, { threshold: 0.45 });
   specObs.observe(document.querySelector('.spectrum'));
+
+  // SCROLL PROGRESS
+  const progress = document.getElementById('scrollProgress');
+  function updateProgress() {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const pct = max > 0 ? h.scrollTop / max : 0;
+    progress.style.transform = 'scaleX(' + pct + ')';
+  }
+  document.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+
+  // ORB MOUSE PARALLAX — gentle drift toward cursor
+  const orb = document.querySelector('.hero-orb');
+  const stage = document.getElementById('orbStage');
+  if (orb && stage && window.matchMedia('(min-width: 900px)').matches) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce) {
+      let tx = 0, ty = 0, rx = 0, ry = 0;
+      window.addEventListener('mousemove', (e) => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        tx = (e.clientX - cx) / cx; // -1..1
+        ty = (e.clientY - cy) / cy;
+      }, { passive: true });
+
+      function tickOrb() {
+        rx += (tx - rx) * 0.06;
+        ry += (ty - ry) * 0.06;
+        stage.style.setProperty('--px', rx.toFixed(3));
+        stage.style.setProperty('--py', ry.toFixed(3));
+        requestAnimationFrame(tickOrb);
+      }
+      tickOrb();
+    }
+  }
+
+  // MAGNETIC PRIMARY BUTTON — slight pull toward cursor
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+      const r = btn.getBoundingClientRect();
+      const x = e.clientX - r.left - r.width / 2;
+      const y = e.clientY - r.top - r.height / 2;
+      btn.style.transform = `translate(${x * 0.18}px, ${y * 0.28}px) translateY(-2px)`;
+    });
+    btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
+  });
 </script>
 
 </body>
