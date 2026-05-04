@@ -7,7 +7,7 @@
 <meta name="description" content="Let's automate the repetitive, boring, or costly processes in your business — together. I learn how your work gets done, build the AI systems to take it off your plate, and train your team to own them. Low cost, high ROI." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg: #0a0806;
@@ -596,6 +596,176 @@
     .hero-orb { opacity: 0.3 !important; }
     h1 .reveal-word span { transform: translateY(0) !important; animation: none !important; }
   }
+
+  /* ============================================================
+     V3 — TYPOGRAPHY + LAYOUT REFRESH
+     Inter site-wide for legibility, Fraunces reserved for hero h1.
+     ============================================================ */
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+
+  /* Inter for all surfaces except the hero h1 + decorative bits */
+  h2, h3, h4, h5, h6,
+  .service-title, .process-title, .capability h3,
+  .stack-item-name, .about-meta-value, .faq-q-text,
+  .spectrum-title, .spectrum-stop-name, .spectrum-example,
+  .contact-line {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    letter-spacing: -0.018em;
+  }
+
+  h2 { font-weight: 600; line-height: 1.1; letter-spacing: -0.024em; }
+  h2 .italic { font-weight: 300; font-style: italic; }
+  h2 .copper { font-weight: 300; font-style: italic; }
+
+  .service-title { font-weight: 600; letter-spacing: -0.02em; }
+  .service-title .italic { font-weight: 300; font-style: italic; }
+  .process-title { font-weight: 600; letter-spacing: -0.015em; }
+  .capability h3 { font-weight: 600; letter-spacing: -0.012em; }
+  .stack-item-name { font-weight: 600; letter-spacing: -0.012em; }
+  .about-meta-value { font-weight: 500; }
+  .faq-q-text { font-weight: 500; letter-spacing: -0.015em; }
+  .spectrum-title { font-weight: 500; letter-spacing: -0.018em; }
+  .spectrum-title .italic { font-weight: 400; font-style: italic; opacity: 0.7; }
+  .spectrum-stop-name { font-weight: 600; }
+  .spectrum-example { font-weight: 500; letter-spacing: -0.015em; line-height: 1.45; }
+  .spectrum-example .italic { font-weight: 400; font-style: italic; opacity: 0.7; }
+  .contact-line { font-weight: 500; letter-spacing: -0.022em; line-height: 1.15; }
+  .contact-line .copper { font-weight: 500; font-style: normal; }
+
+  .hero-sub { font-family: 'Inter', sans-serif; letter-spacing: -0.005em; line-height: 1.55; }
+  .hero-sub strong { font-weight: 600; }
+  .lede { font-family: 'Inter', sans-serif; letter-spacing: -0.005em; }
+  .about-body { font-family: 'Inter', sans-serif; letter-spacing: -0.005em; line-height: 1.6; }
+  .about-body em { font-style: italic; opacity: 0.85; color: var(--ink-soft); }
+  .footer-grid p, footer a, .service-desc, .process-desc, .capability p,
+  .stack-item-note, .faq-a-text, .contact-direct, .thesis-stat-body {
+    font-family: 'Inter', sans-serif;
+    letter-spacing: -0.003em;
+  }
+  .footer-grid .brand { font-family: 'Inter', sans-serif; font-weight: 600; letter-spacing: -0.018em; }
+
+  /* Hero h1 stays Fraunces — but rework the reveal so descenders never clip */
+  h1 { font-family: 'Fraunces', serif; line-height: 1.02; padding-bottom: 0; }
+  h1 .reveal-word { overflow: visible; padding: 0; margin: 0; }
+  h1 .reveal-word span {
+    display: inline-block;
+    transform: translateY(40%);
+    opacity: 0;
+    animation: revealFade 1s var(--easing-out) forwards;
+  }
+  @keyframes revealFade {
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  /* HERO LAYOUT — anchor text to the left, leave room for orb */
+  .hero .wrap {
+    max-width: none;
+    padding-left: clamp(32px, 6vw, 88px);
+    padding-right: clamp(24px, 4vw, 64px);
+  }
+  .hero h1 { max-width: min(1080px, 78vw); }
+  .hero-sub { max-width: 640px; }
+  .hero-meta, .hero-actions { max-width: 1080px; }
+  @media (max-width: 720px) {
+    .hero .wrap { padding-left: 24px; padding-right: 24px; }
+    .hero h1 { max-width: 100%; }
+  }
+
+  /* SPECTRUM — proper alignment + bigger hit area + smoother drag */
+  .spectrum-track {
+    position: relative;
+    padding: 36px 0 8px;
+  }
+  .spectrum-bar {
+    height: 3px;
+    border-radius: 999px;
+    cursor: grab;
+    /* Larger hit zone via padding + negative margin */
+    padding: 22px 0;
+    margin: -22px 0;
+    background: transparent;
+    box-shadow: none;
+  }
+  .spectrum-bar::before {
+    content: '';
+    position: absolute; left: 0; right: 0; top: 50%;
+    height: 3px;
+    background: var(--rule-strong);
+    border-radius: 999px;
+    transform: translateY(-50%);
+  }
+  .spectrum-bar:active { cursor: grabbing; }
+  .spectrum-bar-fill {
+    height: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 999px;
+  }
+  .spectrum-handle {
+    width: 22px; height: 22px;
+    top: 50%;
+    box-shadow: 0 0 0 5px rgba(219, 111, 44, 0.18), 0 0 24px rgba(219, 111, 44, 0.45);
+    transition: box-shadow 0.2s ease;
+  }
+  .spectrum-handle:hover { box-shadow: 0 0 0 8px rgba(219, 111, 44, 0.22), 0 0 32px rgba(219, 111, 44, 0.55); }
+
+  /* Replace grid stops with absolute-positioned for true alignment with bar % */
+  .spectrum-stops {
+    display: block;
+    position: relative;
+    height: 76px;
+    margin-top: 22px;
+  }
+  .spectrum-stop {
+    position: absolute;
+    top: 0;
+    padding: 0;
+    cursor: pointer;
+    width: 140px;
+    text-align: center;
+  }
+  .spectrum-stop .spectrum-stop-mark {
+    margin: 0 auto 12px;
+  }
+  .spectrum-stop[data-stop="0"] { left: 0; transform: translateX(0); text-align: left; }
+  .spectrum-stop[data-stop="0"] .spectrum-stop-mark { margin: 0 0 12px 0; }
+  .spectrum-stop[data-stop="1"] { left: 33.333%; transform: translateX(-50%); }
+  .spectrum-stop[data-stop="2"] { left: 66.666%; transform: translateX(-50%); }
+  .spectrum-stop[data-stop="3"] { right: 0; left: auto; transform: translateX(0); text-align: right; }
+  .spectrum-stop[data-stop="3"] .spectrum-stop-mark { margin: 0 0 12px auto; }
+  @media (max-width: 700px) {
+    .spectrum-stops { height: auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .spectrum-stop { position: static; transform: none !important; width: auto; text-align: left !important; }
+    .spectrum-stop .spectrum-stop-mark { margin: 0 0 10px 0 !important; }
+  }
+
+  /* STACK GRID — clean fixed columns so 12 items always fill */
+  .stack-grid {
+    grid-template-columns: repeat(6, 1fr);
+  }
+  @media (max-width: 1100px) { .stack-grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (max-width: 700px) { .stack-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  /* CALENDLY — darker chrome around the embed */
+  .calendly-wrap {
+    background: var(--bg);
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45), 0 0 0 1px var(--rule);
+  }
+  .calendly-inline-widget {
+    width: 100%;
+    min-height: 580px;
+    background: var(--bg);
+  }
+  .calendly-inline-widget iframe { background: var(--bg) !important; }
+
+  /* Drop the about-portrait grain since it's not needed at this density */
+  .about-portrait::before { font-family: 'Fraunces', serif; }
 </style>
 </head>
 <body>
@@ -644,8 +814,6 @@
         <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
         Boston, MA
       </span>
-      <span class="divider"></span>
-      <span class="status">Currently taking on 2 to 3 new engagements</span>
     </div>
 
     <h1>
@@ -659,11 +827,11 @@
       <span class="reveal-word"><span class="italic" style="animation-delay: 0.68s;">could</span></span>
       <span class="reveal-word"><span class="italic" style="animation-delay: 0.76s;">be</span></span>
       <span class="reveal-word"><span class="copper" style="animation-delay: 0.84s;">running</span></span>
-      <span class="reveal-word"><span class="copper" style="animation-delay: 0.92s;">itself.</span></span>
+      <span class="reveal-word"><span class="copper" style="animation-delay: 0.92s;">itself</span></span>
     </h1>
 
     <p class="hero-sub">
-      Let's automate the <strong>repetitive, boring, or costly</strong> processes in your business — together. I sit inside your team for a few weeks, learn how the work actually gets done, and build the AI systems that take it off your plate. Then I teach your team to own them. <strong>Low cost. High ROI. No theater.</strong>
+      Let's automate the <strong>repetitive, boring, or costly</strong> processes in your business — together. I learn how your work actually gets done, build the AI systems that take it off your plate, and teach your team to own them. <strong>Low cost, high ROI.</strong>
     </p>
 
     <div class="hero-actions">
@@ -696,7 +864,7 @@
 <section id="thesis">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">01</span> The pattern</div>
-    <h2>Most companies bolted AI onto a few jobs and stopped. <span class="italic">There's a lot more to do.</span></h2>
+    <h2>Most companies bolted AI onto a few jobs and <span class="italic">stopped there</span></h2>
     <p class="lede">
       Every business I've worked inside has the same shape. A handful of people use ChatGPT to draft emails. A team or two has a Copilot license. Maybe someone built a chatbot. Then the work plateaus, because the people who can see what to build next are not the people doing the day-to-day work.
     </p>
@@ -736,7 +904,7 @@
 <section id="what">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">02</span> What I do</div>
-    <h2>Three ways an engagement starts. <span class="italic">Most grow into the next.</span></h2>
+    <h2>Three ways an engagement <span class="italic">starts</span></h2>
     <p class="lede">
       Pricing depends on scope, so we figure that out on a call. Every engagement starts with a free intro conversation. If we're a fit, we talk numbers. If we're not, I'll usually point you to someone who is.
     </p>
@@ -763,7 +931,7 @@
         <div><div class="service-title">The Build</div></div>
         <div>
           <div class="service-desc">
-            Six to twelve weeks. I build what the audit pointed at. Could be an internal assistant trained on your data, a research and drafting workflow, a sales call summarizer, a document processing pipeline, an automation between three tools that nobody wants to wire up. <strong>I write the prompts, build the integrations, document the system, and train the team that'll own it.</strong> You get working software, not a deck.
+            Six to twelve weeks. I build what the audit pointed at — an internal assistant trained on your data, a research and drafting workflow, a sales call summarizer, a document processing pipeline, an automation between three tools nobody wants to wire up. <strong>I write the prompts, build the integrations, document the system, and train the team that'll own it.</strong> You get working software, not a deck.
           </div>
           <div class="service-tags">
             <span class="service-tag">Internal AI tools</span>
@@ -798,7 +966,7 @@
 <section id="process">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">03</span> The engagement</div>
-    <h2>How a typical project moves. <span class="italic">Roughly.</span></h2>
+    <h2>How a typical project <span class="italic">moves</span></h2>
     <p class="lede">
       Every engagement is shaped to the business, but the rough arc is the same. Five phases. Some get long, some are short. The whole thing usually lands somewhere between six and sixteen weeks for the first round, then settles into the embedded rhythm.
     </p>
@@ -845,51 +1013,51 @@
 <section id="capabilities">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">04</span> What gets built</div>
-    <h2>The kinds of things I build inside businesses. <span class="italic">A short list.</span></h2>
+    <h2>The kinds of things I <span class="italic">build</span></h2>
     <p class="lede">
       No two projects are the same, but the patterns repeat. Each of these has shipped inside a real engagement. The shape changes, the underlying work doesn't.
     </p>
 
     <div class="capabilities">
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 22H18a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v9.5"/><polyline points="14 2 14 8 20 8"/><path d="M13.378 15.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"/></svg>
         <h3>Document drafting systems</h3>
-        <p>Long-form documents (memos, reports, briefs) drafted from your inputs in your voice. Team reviews and finalizes. Hours collapse to minutes.</p>
+        <p>Long-form documents drafted from your inputs in your voice. Team reviews and finalizes; hours collapse to minutes.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
         <h3>Internal AI assistants</h3>
-        <p>Trained on your documents, your data, your way of doing things. Available to your team in Slack, Teams, or a custom interface.</p>
+        <p>Trained on your documents, your data, your way of doing things — available in Slack, Teams, or a custom interface.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="20" cy="18" r="2"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <h3>Meeting and call workflows</h3>
-        <p>Transcripts cleaned, summarized, action items pulled, and pushed into your CRM or task tracker. Post-meeting cleanup nobody wants to do.</p>
+        <p>Transcripts cleaned, summarized, action items pulled and pushed into your CRM or task tracker — the post-meeting cleanup nobody wants to do.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>
         <h3>Cross-tool automation</h3>
-        <p>Stitching your stack together. Email triggers a CRM update, which triggers a draft, which lands in your inbox for review. Removes the copy-paste tax.</p>
+        <p>Stitching your stack together. An email triggers a CRM update, which triggers a draft, which lands in your inbox for review — no more copy-paste tax.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12l4-4 4 4 4-4 6 6"/><path d="M3 18h18"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
         <h3>Reporting automation</h3>
-        <p>Weekly reports, dashboards, status summaries pulled from multiple sources, written in plain English, in your inbox before Monday standup.</p>
+        <p>Weekly reports, dashboards, and status summaries pulled from multiple sources, written in plain English, in your inbox before Monday standup.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M3 12h18"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
         <h3>Research pipelines</h3>
-        <p>Pull data from web, internal docs, broker research, transcripts. Synthesize. Output a structured first pass your analysts finish.</p>
+        <p>Pull data from the web, internal docs, broker research, and transcripts; synthesize and output a structured first pass your analysts can finish.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 8a3 3 0 0 1 6 0v8a3 3 0 0 1-6 0zM13 12h7M13 8h5"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
         <h3>Onboarding and training</h3>
-        <p>Get your team using AI tools well. New hires up to speed faster. Fewer support tickets. The unsexy work that makes everything else stick.</p>
+        <p>Get your team using AI tools well, new hires up to speed faster, and fewer support tickets — the unsexy work that makes everything else stick.</p>
       </div>
       <div class="capability">
-        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 1 1-14 0M12 5V2M12 22v-3"/></svg>
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         <h3>Custom internal tools</h3>
-        <p>The thing your team has been asking for that no SaaS vendor sells. Built fast, hosted simply, owned by you.</p>
+        <p>The thing your team has been asking for that no SaaS vendor sells — built fast, hosted simply, owned by you.</p>
       </div>
     </div>
   </div>
@@ -898,7 +1066,7 @@
 <section id="spectrum-section">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">05</span> The arc</div>
-    <h2>Every workflow lives somewhere on this line. <span class="italic">My job is to move them right.</span></h2>
+    <h2>Every workflow lives somewhere on <span class="italic">this line</span></h2>
     <p class="lede">
       Most processes start manual. Then someone uses ChatGPT for a piece of it. Then a real tool gets built. Then the tool runs on its own. The end goal isn't replacing your team. It's freeing them from the work that doesn't need them.
     </p>
@@ -934,7 +1102,7 @@
 <section id="stack">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">06</span> The stack</div>
-    <h2>What I work with, day to day.</h2>
+    <h2>What I work with, <span class="italic">day to day</span></h2>
     <div class="stack-intro">
       <p class="lede">
         Tool-agnostic but opinionated. I'll work with whatever your business already runs on, and recommend additions when they earn their place. The list below is what I reach for most often. <strong>The right tool depends on the job.</strong>
@@ -943,21 +1111,17 @@
 
     <div class="stack-grid">
       <div class="stack-item"><div class="stack-item-cat">Frontier model</div><div class="stack-item-name">Claude</div><div class="stack-item-note">Anthropic · primary</div></div>
-      <div class="stack-item"><div class="stack-item-cat">Frontier model</div><div class="stack-item-name">GPT</div><div class="stack-item-note">OpenAI · when fit</div></div>
       <div class="stack-item"><div class="stack-item-cat">Agentic</div><div class="stack-item-name">Claude Code</div><div class="stack-item-note">Build pipelines</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Claude Cowork</div><div class="stack-item-note">Team AI workspace</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Frontier model</div><div class="stack-item-name">GPT</div><div class="stack-item-note">OpenAI · when fit</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Agentic</div><div class="stack-item-name">Agent Builder</div><div class="stack-item-note">OpenAI platform</div></div>
       <div class="stack-item"><div class="stack-item-cat">Protocol</div><div class="stack-item-name">MCP</div><div class="stack-item-note">Tool integrations</div></div>
-      <div class="stack-item"><div class="stack-item-cat">Automation</div><div class="stack-item-name">n8n</div><div class="stack-item-note">Self-hosted flows</div></div>
-      <div class="stack-item"><div class="stack-item-cat">Automation</div><div class="stack-item-name">Make.com</div><div class="stack-item-note">No-code routing</div></div>
       <div class="stack-item"><div class="stack-item-cat">Hosting</div><div class="stack-item-name">Vercel</div><div class="stack-item-note">Apps and APIs</div></div>
-      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">Dynamics 365</div><div class="stack-item-note">Microsoft stack</div></div>
-      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">HubSpot</div><div class="stack-item-note">Marketing-led orgs</div></div>
-      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">Salesforce</div><div class="stack-item-note">Enterprise</div></div>
-      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Microsoft 365</div><div class="stack-item-note">Teams, SharePoint</div></div>
-      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Google Workspace</div><div class="stack-item-note">Drive, Gmail</div></div>
-      <div class="stack-item"><div class="stack-item-cat">CMS</div><div class="stack-item-name">WordPress</div><div class="stack-item-note">Marketing sites</div></div>
       <div class="stack-item"><div class="stack-item-cat">Development</div><div class="stack-item-name">React, Next.js</div><div class="stack-item-note">Custom apps</div></div>
       <div class="stack-item"><div class="stack-item-cat">Data</div><div class="stack-item-name">Python, SQL</div><div class="stack-item-note">Glue and pipelines</div></div>
-      <div class="stack-item"><div class="stack-item-cat">More</div><div class="stack-item-name">Whatever fits</div><div class="stack-item-note">Tool follows job</div></div>
+      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">Dynamics 365</div><div class="stack-item-note">Microsoft stack</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Microsoft 365</div><div class="stack-item-note">Teams, SharePoint</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Google Workspace</div><div class="stack-item-note">Drive, Gmail</div></div>
     </div>
   </div>
 </section>
@@ -965,7 +1129,7 @@
 <section id="about">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">07</span> Who's behind this</div>
-    <h2>Damian Mathews. <span class="italic">Boston-based. Working everywhere.</span></h2>
+    <h2>Damian Mathews</h2>
 
     <div class="about">
       <div class="about-portrait">
@@ -973,14 +1137,14 @@
       </div>
       <div>
         <div class="about-body">
-          <p>I've spent the last few years building AI systems for real businesses. Asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
-          <p>Different industries, same shape every time. Find the bottleneck. Build the thing. Hand it back. The technology is the easy part. The hard part is sitting next to the operator long enough to understand what they actually need, and then building it carefully enough that they trust it on day one.</p>
-          <p>Background is in marketing and CRM, which turns out to be the right pre-AI training. Most of the value is in the boring middle of a company, where systems meet people and someone has to translate between them. <em>That's where I work.</em></p>
+          <p>I've spent the last few years building AI systems for real businesses — asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
+          <p>Different industries, same shape every time: find the bottleneck, build the thing, hand it back. The technology is the easy part — the hard part is sitting next to the operator long enough to understand what they actually need, then building it carefully enough that they trust it on day one.</p>
+          <p>My background is in marketing and CRM, which turns out to be the right pre-AI training. <em>Most of the value is in the boring middle of a company, where systems meet people and someone has to translate between them.</em></p>
         </div>
 
         <div class="about-meta">
           <div class="about-meta-row"><div class="about-meta-label">Based</div><div class="about-meta-value">Boston, MA</div></div>
-          <div class="about-meta-row"><div class="about-meta-label">Working with</div><div class="about-meta-value">Two clients · two slots open</div></div>
+          <div class="about-meta-row"><div class="about-meta-label">Engagements</div><div class="about-meta-value">Audit · Build · Embedded</div></div>
           <div class="about-meta-row"><div class="about-meta-label">Reachable</div><div class="about-meta-value">Email · Calendly · LinkedIn</div></div>
         </div>
       </div>
@@ -991,7 +1155,7 @@
 <section id="faq">
   <div class="wrap">
     <div class="section-label"><span class="line"></span><span class="num">08</span> Common questions</div>
-    <h2>Things I get asked. <span class="italic">Mostly on the first call.</span></h2>
+    <h2>Things I <span class="italic">get asked</span></h2>
 
     <div class="faq">
       <div class="faq-item"><div class="faq-q"><div class="faq-q-text">Does my team need to be technical to work with you?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">No. Most of the people I work with are operators, executives, analysts, and team leads. The point of bringing me in is so your team doesn't have to figure out the technical part. I do that. Your team's job is to tell me what their week looks like, what's annoying, and what they wish would just happen on its own. I take it from there.</div></div></div>
@@ -1011,7 +1175,7 @@
     <div class="section-label"><span class="line"></span><span class="num">09</span> Get in touch</div>
     <div class="contact-grid">
       <div>
-        <p class="contact-line">Tell me what's <span class="copper">repetitive, boring, or costly</span>. I'll show you what AI can take off your plate.</p>
+        <p class="contact-line">Tell me what's <span class="copper">repetitive, boring, or costly</span> — I'll show you what AI can take off your plate.</p>
         <p class="contact-direct">Book a call on the right or send me an email. I read everything that comes in. If we're a fit, I'll write back inside a day with a time. If we're not, I'll usually say so and point you toward someone who is.</p>
         <a href="mailto:hello@damianmathews.com" class="contact-email">hello@damianmathews.com <span>→</span></a>
       </div>
@@ -1021,8 +1185,9 @@
           <div class="calendly-header-title">Book a 30-minute intro</div>
           <div class="calendly-header-status">Live</div>
         </div>
-        <!-- CALENDLY EMBED: replace the src URL with your real Calendly link -->
-        <iframe class="calendly-iframe" src="https://calendly.com/damianmathews/meet-w-me?hide_event_type_details=1&background_color=0a0806&text_color=ece2cb&primary_color=db6f2c" title="Book a call with Damian Mathews" loading="lazy"></iframe>
+        <!-- CALENDLY INLINE WIDGET — supports color theming on Standard+ plans -->
+        <div class="calendly-inline-widget" data-url="https://calendly.com/damianmathews/meet-w-me?hide_event_type_details=1&hide_gdpr_banner=1&background_color=0a0806&text_color=ece2cb&primary_color=db6f2c"></div>
+        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
       </div>
     </div>
   </div>
@@ -1057,8 +1222,7 @@
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-row">
-        <p>© 2026 Damian Mathews. Boston, MA.</p>
-        <p>Built fast. Iterated faster.</p>
+        <p>© 2026 Damian Mathews · Boston, MA</p>
       </div>
     </div>
   </div>
@@ -1179,29 +1343,51 @@
   handle.style.left = '0%';
   fill.style.width = '0%';
 
-  stops.forEach(stop => {
-    stop.addEventListener('click', () => setStage(parseInt(stop.dataset.stop)));
-  });
-
+  // SPECTRUM DRAG — starts from anywhere on the bar; smooth pointer events
+  const bar = document.querySelector('.spectrum-bar');
   let dragging = false;
-  const track = document.querySelector('.spectrum-bar');
 
-  function handleDrag(clientX) {
-    const rect = track.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    const stage = Math.round(pct * (stages.length - 1));
+  function pctFrom(clientX) {
+    const rect = bar.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+  }
+
+  function applyDrag(clientX) {
+    const stage = Math.round(pctFrom(clientX) * (stages.length - 1));
     if (stage !== currentStage) setStage(stage);
   }
 
-  handle.addEventListener('mousedown', (e) => { dragging = true; e.preventDefault(); });
-  document.addEventListener('mouseup', () => { dragging = false; });
-  document.addEventListener('mousemove', (e) => { if (dragging) handleDrag(e.clientX); });
+  function start(e) {
+    dragging = true;
+    bar.style.cursor = 'grabbing';
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    applyDrag(x);
+    e.preventDefault();
+  }
+  function move(e) {
+    if (!dragging) return;
+    const x = e.touches ? e.touches[0].clientX : e.clientX;
+    applyDrag(x);
+  }
+  function end() {
+    dragging = false;
+    bar.style.cursor = '';
+  }
 
-  handle.addEventListener('touchstart', (e) => { dragging = true; });
-  document.addEventListener('touchend', () => { dragging = false; });
-  document.addEventListener('touchmove', (e) => { if (dragging) handleDrag(e.touches[0].clientX); });
+  bar.addEventListener('pointerdown', start);
+  document.addEventListener('pointermove', move);
+  document.addEventListener('pointerup', end);
+  document.addEventListener('pointercancel', end);
 
-  track.addEventListener('click', (e) => handleDrag(e.clientX));
+  // Also support old-style touch for safety
+  bar.addEventListener('touchstart', start, { passive: false });
+  document.addEventListener('touchmove', move, { passive: false });
+  document.addEventListener('touchend', end);
+
+  // Click on a stop label jumps to that stage
+  stops.forEach(stop => {
+    stop.addEventListener('click', (e) => { e.stopPropagation(); setStage(parseInt(stop.dataset.stop)); });
+  });
 
   // Auto-advance the spectrum on entry once
   let autoRan = false;
