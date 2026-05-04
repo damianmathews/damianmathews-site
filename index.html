@@ -866,6 +866,15 @@
     margin: 0 auto !important;
     padding: 0 40px !important;
   }
+
+  /* Shrink h1 so "Your business runs on work" fits on one line within
+     the 720px hero text column (was clamping up to 68px and forcing
+     "work" to wrap onto a third line). */
+  body header.hero h1 {
+    font-size: clamp(32px, 3.4vw, 52px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+  }
   .hero h1 { max-width: min(820px, 60vw); }
   .hero-sub { max-width: 480px; }
   .hero-meta, .hero-actions { max-width: 820px; }
