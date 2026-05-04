@@ -766,6 +766,62 @@
 
   /* Drop the about-portrait grain since it's not needed at this density */
   .about-portrait::before { font-family: 'Fraunces', serif; }
+
+  /* ============================================================
+     V4 — TYPE SCALE + LAYOUT TIGHTENING
+     Hero matches site font; below-hero sizes reduced.
+     ============================================================ */
+
+  /* Hero h1 → Inter so the page is one consistent typeface */
+  h1 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 600;
+    font-size: clamp(44px, 7.5vw, 104px);
+    line-height: 1.02;
+    letter-spacing: -0.035em;
+  }
+  h1 .italic { font-weight: 300; font-style: italic; color: var(--ink-soft); letter-spacing: -0.03em; }
+  h1 .copper { font-weight: 300; font-style: italic; color: var(--copper); letter-spacing: -0.03em; }
+
+  /* Push hero hard against the left edge */
+  .hero .wrap {
+    padding-left: clamp(20px, 2.4vw, 40px);
+    padding-right: clamp(20px, 4vw, 64px);
+  }
+  .hero h1 { max-width: min(1100px, 84vw); }
+
+  /* Below-hero type — smaller, calmer */
+  h2 {
+    font-size: clamp(28px, 3.6vw, 46px);
+    line-height: 1.1;
+    letter-spacing: -0.022em;
+  }
+  .lede { font-size: clamp(16px, 1.3vw, 18px); line-height: 1.6; max-width: 720px; }
+  .about-body { font-size: clamp(15px, 1.15vw, 17px); line-height: 1.65; }
+  .service-title { font-size: clamp(24px, 2.4vw, 32px); }
+  .service-desc { font-size: 15px; line-height: 1.6; }
+  .process-title { font-size: clamp(18px, 1.5vw, 20px); }
+  .process-desc { font-size: 14px; line-height: 1.55; }
+  .capability h3 { font-size: 17px; }
+  .capability p { font-size: 14px; line-height: 1.55; }
+  .stack-item-name { font-size: 17px; }
+  .faq-q-text { font-size: clamp(17px, 1.6vw, 21px); }
+  .faq-a-text { font-size: 15px; line-height: 1.65; }
+  .spectrum-title { font-size: clamp(18px, 1.6vw, 22px); }
+  .spectrum-example { font-size: clamp(17px, 1.5vw, 20px); }
+  .spectrum-detail { font-size: 14px; }
+  .contact-line { font-size: clamp(28px, 3vw, 44px); }
+  .contact-direct { font-size: 15px; line-height: 1.6; }
+  .thesis-stat-num { font-size: clamp(40px, 4.5vw, 64px); }
+  .thesis-stat-body { font-size: 15px; }
+  .ticker-item { font-size: 22px; }
+
+  /* Section padding — keep generous but a little tighter */
+  section { padding: 110px 0; }
+  .section-label { margin-bottom: 36px; }
+
+  /* Hero sub a touch smaller too */
+  .hero-sub { font-size: clamp(16px, 1.25vw, 19px); max-width: 600px; }
 </style>
 </head>
 <body>
@@ -1185,9 +1241,7 @@
           <div class="calendly-header-title">Book a 30-minute intro</div>
           <div class="calendly-header-status">Live</div>
         </div>
-        <!-- CALENDLY INLINE WIDGET — supports color theming on Standard+ plans -->
-        <div class="calendly-inline-widget" data-url="https://calendly.com/damianmathews/meet-w-me?hide_event_type_details=1&hide_gdpr_banner=1&background_color=0a0806&text_color=ece2cb&primary_color=db6f2c"></div>
-        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+        <iframe class="calendly-iframe" src="https://calendly.com/damianmathews/meet-w-me?hide_event_type_details=1&hide_gdpr_banner=1&background_color=0a0806&text_color=ece2cb&primary_color=db6f2c" title="Book a call with Damian Mathews" loading="lazy"></iframe>
       </div>
     </div>
   </div>
@@ -1452,6 +1506,31 @@
     });
     btn.addEventListener('mouseleave', () => { btn.style.transform = ''; });
   });
+
+  // CLEAN ANCHOR LINKS — smooth scroll without putting #section in the URL
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top, behavior: 'smooth' });
+    });
+  });
+
+  // If the user lands on a URL that already has a hash, scroll to it then strip it
+  if (window.location.hash) {
+    const target = document.querySelector(window.location.hash);
+    if (target) {
+      requestAnimationFrame(() => {
+        const top = target.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top, behavior: 'auto' });
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      });
+    }
+  }
 </script>
 
 </body>
