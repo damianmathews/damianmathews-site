@@ -8,7 +8,7 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
     --bg: #0a0806;
@@ -906,6 +906,134 @@
   @media (max-width: 900px) {
     .hero .wrap > * { max-width: 100%; }
   }
+
+  /* ============================================================
+     V10 — MOBILE AUDIT + HAMBURGER + SLIDER POLISH
+     ============================================================ */
+
+  /* Hamburger button — visible only at <=720px */
+  .nav-toggle {
+    display: none;
+    width: 40px; height: 40px;
+    background: transparent;
+    border: 1px solid var(--rule-strong);
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    position: relative;
+    z-index: 102;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 18px; height: 1.5px;
+    background: var(--ink);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: transform 0.3s var(--easing-out), opacity 0.2s ease, top 0.3s var(--easing-out);
+    border-radius: 2px;
+  }
+  .nav-toggle span:nth-child(1) { top: 13px; }
+  .nav-toggle span:nth-child(2) { top: 19px; }
+  .nav-toggle span:nth-child(3) { top: 25px; }
+  .nav-toggle.open span:nth-child(1) { top: 19px; transform: translateX(-50%) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { top: 19px; transform: translateX(-50%) rotate(-45deg); }
+
+  /* Mobile nav drawer — full-screen overlay */
+  .nav-drawer {
+    position: fixed; inset: 0;
+    background: rgba(10, 8, 6, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 101;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s var(--easing-out), visibility 0.3s;
+  }
+  .nav-drawer.open { opacity: 1; visibility: visible; }
+  .nav-drawer-inner {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    gap: 28px;
+    padding: 0 24px;
+  }
+  .nav-drawer a {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: color 0.2s ease, transform 0.5s var(--easing-out), opacity 0.5s ease;
+  }
+  .nav-drawer.open a { transform: translateY(0); opacity: 1; }
+  .nav-drawer.open a:nth-child(1) { transition-delay: 0.10s; }
+  .nav-drawer.open a:nth-child(2) { transition-delay: 0.16s; }
+  .nav-drawer.open a:nth-child(3) { transition-delay: 0.22s; }
+  .nav-drawer.open a:nth-child(4) { transition-delay: 0.28s; }
+  .nav-drawer a:active, .nav-drawer a:hover { color: var(--copper); }
+  .nav-drawer a.cta {
+    background: var(--copper);
+    color: var(--bg);
+    padding: 16px 32px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    margin-top: 8px;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 720px) {
+    .nav-toggle { display: flex; align-items: center; justify-content: center; }
+    nav .nav-links { display: none !important; }
+  }
+
+  /* SERVICE GRID — fix broken mobile (was wrapping desc to 50px column).
+     Stack vertically below 800px. */
+  @media (max-width: 800px) {
+    .service {
+      display: block !important;
+      padding: 32px 0 !important;
+    }
+    .service > * { width: 100%; max-width: 100%; }
+    .service-num { padding-top: 0; margin-bottom: 8px; }
+    .service-title { margin-bottom: 12px; font-size: clamp(22px, 6vw, 28px) !important; }
+    .service:hover { padding-left: 0; }
+  }
+
+  /* MOBILE TYPOGRAPHY + SPACING SWEEP */
+  @media (max-width: 720px) {
+    .lede { font-size: 16px !important; line-height: 1.6; }
+    .about-body { font-size: 16px !important; }
+    .about-body p + p { margin-top: 16px; }
+    .contact-line { font-size: clamp(26px, 7vw, 34px) !important; line-height: 1.2; }
+    section { padding: 80px 0; }
+    .section-label { margin-bottom: 28px; }
+    h2 { font-size: clamp(26px, 7vw, 32px) !important; }
+    body header.hero h1 { font-size: clamp(32px, 8.5vw, 42px) !important; line-height: 1.1; }
+    .hero-sub { font-size: 16px !important; max-width: 100% !important; line-height: 1.55; }
+    .hero-meta { margin-bottom: 32px; }
+    .thesis-stat { padding-left: 20px; }
+    .thesis-grid { gap: 32px; margin-top: 48px; }
+    .stack-item { padding: 20px 16px; }
+    .faq-q { padding: 24px 0; }
+    .faq-q-text { font-size: 16px !important; }
+    .calendly-iframe { height: 540px; }
+    .ticker-item { font-size: 18px; }
+    .contact { padding: 80px 0; }
+    .contact-grid { gap: 40px !important; }
+    .contact-direct { font-size: 14px !important; }
+    .footer-grid { gap: 28px !important; }
+  }
+
+  /* SPECTRUM SLIDER — smooth drag (transitions controlled by JS).
+     Handle and fill have no default transition so they follow the
+     cursor in real time during drag. JS adds transition for click jumps. */
+  .spectrum-handle { transition: box-shadow 0.2s ease; will-change: left; }
+  .spectrum-bar-fill { transition: none; will-change: width; }
 </style>
 </head>
 <body>
@@ -928,8 +1056,20 @@
       <a href="#about">About</a>
       <a href="#contact" class="cta">Book a call</a>
     </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <div class="nav-drawer-inner">
+    <a href="#what">What I do</a>
+    <a href="#process">Process</a>
+    <a href="#about">About</a>
+    <a href="#contact" class="cta">Book a call</a>
+  </div>
+</div>
 
 <header class="hero">
   <div class="hero-orb" aria-hidden="true">
@@ -1277,9 +1417,10 @@
       </div>
       <div>
         <div class="about-body">
-          <p>I've spent the last few years building AI systems for real businesses: asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
-          <p>Different industries, same shape every time: find the bottleneck, build the thing, hand it back. The technology is the easy part. The hard part is sitting next to the operator long enough to understand what they actually need, then building it carefully enough that they trust it on day one.</p>
-          <p>My background is in marketing and CRM, which turns out to be the right pre-AI training. <em>Most of the value is in the boring middle of a company, where systems meet people and someone has to translate between them.</em></p>
+          <p>I started my first business, Newton Kicks, during the 2020 lockdowns. While still in online school, I generated over $500k in revenue in the first 18 months. That's where I learned digital marketing, social media strategy, sales, and what it actually takes to grow a company from zero.</p>
+          <p>Then ChatGPT launched and I was hooked from day one. I've spent every spare hour since learning the ins and outs of prompting, building automations, vibe-coding apps end-to-end, and figuring out how to make AI earn its keep inside real businesses.</p>
+          <p>Today I bring both halves together: a founder's instinct for what businesses actually need, and a builder's toolkit for shipping it. I've worked with asset managers, multi-location operators, marketing teams, and founders who needed something built yesterday. Different industries, same shape every time: find the bottleneck, build the thing, hand it back.</p>
+          <p><em>Most of the value lives in the boring middle of a company, where systems meet people and someone has to translate between them. That's where I work.</em></p>
         </div>
 
         <div class="about-meta">
@@ -1456,17 +1597,21 @@
 
   const handle = document.getElementById('specHandle');
   const fill = document.getElementById('specFill');
+  const bar = document.querySelector('.spectrum-bar');
   const stops = document.querySelectorAll('.spectrum-stop');
   const labelEl = document.getElementById('specLabel');
   const exampleEl = document.getElementById('specExample');
   const detailEl = document.getElementById('specDetail');
-  let currentStage = 0;
 
+  let currentPct = 0;       // 0..1 — exact handle position
+  let currentStage = -1;    // which stage's content is displayed
+  let dragging = false;
+  let rafAnimId = null;
+
+  // Update the displayed stage content (with cross-fade)
   function setStage(i) {
+    if (i === currentStage) return;
     currentStage = i;
-    const pct = (i / (stages.length - 1)) * 100;
-    handle.style.left = pct + '%';
-    fill.style.width = pct + '%';
     stops.forEach((s, idx) => s.classList.toggle('active', idx === i));
     exampleEl.style.opacity = '0';
     detailEl.style.opacity = '0';
@@ -1476,60 +1621,103 @@
       detailEl.textContent = stages[i].detail;
       exampleEl.style.opacity = '1';
       detailEl.style.opacity = '1';
-    }, 200);
+    }, 180);
   }
 
-  // Initialize handle position
-  handle.style.left = '0%';
-  fill.style.width = '0%';
+  // Apply a percentage to handle and fill positions
+  function applyPct(pct) {
+    pct = Math.max(0, Math.min(1, pct));
+    currentPct = pct;
+    handle.style.left = (pct * 100) + '%';
+    fill.style.width = (pct * 100) + '%';
+    // Stage display follows nearest stop
+    const stage = Math.round(pct * (stages.length - 1));
+    setStage(stage);
+  }
 
-  // SPECTRUM DRAG — starts from anywhere on the bar; smooth pointer events
-  const bar = document.querySelector('.spectrum-bar');
-  let dragging = false;
+  // Smoothly animate from current pct to target pct over `duration` ms
+  function animateTo(target, duration = 450) {
+    if (rafAnimId) cancelAnimationFrame(rafAnimId);
+    const start = currentPct;
+    const startTime = performance.now();
+    const ease = (t) => 1 - Math.pow(1 - t, 3); // ease-out cubic
+    function tick(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      applyPct(start + (target - start) * ease(t));
+      if (t < 1) rafAnimId = requestAnimationFrame(tick);
+      else rafAnimId = null;
+    }
+    rafAnimId = requestAnimationFrame(tick);
+  }
 
-  function pctFrom(clientX) {
+  function pctFromX(clientX) {
     const rect = bar.getBoundingClientRect();
     return Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
   }
 
-  function applyDrag(clientX) {
-    const stage = Math.round(pctFrom(clientX) * (stages.length - 1));
-    if (stage !== currentStage) setStage(stage);
-  }
+  // Initialize at stage 0
+  applyPct(0);
 
-  function start(e) {
+  // ---- DRAG (pointer events handle mouse + touch + pen) ----
+  function onDown(e) {
     dragging = true;
+    if (rafAnimId) { cancelAnimationFrame(rafAnimId); rafAnimId = null; }
     bar.style.cursor = 'grabbing';
-    const x = e.touches ? e.touches[0].clientX : e.clientX;
-    applyDrag(x);
+    if (handle.setPointerCapture && e.pointerId !== undefined) {
+      try { handle.setPointerCapture(e.pointerId); } catch (_) {}
+    }
+    const x = e.clientX !== undefined ? e.clientX : e.touches[0].clientX;
+    applyPct(pctFromX(x));
     e.preventDefault();
   }
-  function move(e) {
+  function onMove(e) {
     if (!dragging) return;
-    const x = e.touches ? e.touches[0].clientX : e.clientX;
-    applyDrag(x);
+    const x = e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0].clientX);
+    if (x === undefined) return;
+    applyPct(pctFromX(x));
   }
-  function end() {
+  function onUp() {
+    if (!dragging) return;
     dragging = false;
     bar.style.cursor = '';
+    // Snap smoothly to nearest stage
+    const nearest = Math.round(currentPct * (stages.length - 1));
+    const targetPct = nearest / (stages.length - 1);
+    animateTo(targetPct, 280);
   }
 
-  bar.addEventListener('pointerdown', start);
-  document.addEventListener('pointermove', move);
-  document.addEventListener('pointerup', end);
-  document.addEventListener('pointercancel', end);
+  bar.addEventListener('pointerdown', onDown);
+  document.addEventListener('pointermove', onMove);
+  document.addEventListener('pointerup', onUp);
+  document.addEventListener('pointercancel', onUp);
 
-  // Also support old-style touch for safety
-  bar.addEventListener('touchstart', start, { passive: false });
-  document.addEventListener('touchmove', move, { passive: false });
-  document.addEventListener('touchend', end);
-
-  // Click on a stop label jumps to that stage
+  // Click on stop label/dot animates handle smoothly
   stops.forEach(stop => {
-    stop.addEventListener('click', (e) => { e.stopPropagation(); setStage(parseInt(stop.dataset.stop)); });
+    stop.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const targetStage = parseInt(stop.dataset.stop);
+      animateTo(targetStage / (stages.length - 1), 450);
+    });
   });
 
-  // Auto-advance the spectrum on entry once
+  // Keyboard support — arrow keys when focused
+  bar.setAttribute('tabindex', '0');
+  bar.setAttribute('role', 'slider');
+  bar.setAttribute('aria-valuemin', '0');
+  bar.setAttribute('aria-valuemax', String(stages.length - 1));
+  bar.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      const next = Math.min(stages.length - 1, currentStage + 1);
+      animateTo(next / (stages.length - 1), 350);
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+      e.preventDefault();
+      const prev = Math.max(0, currentStage - 1);
+      animateTo(prev / (stages.length - 1), 350);
+    }
+  });
+
+  // Auto-advance on first scroll-into-view, then stop
   let autoRan = false;
   const specObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -1539,12 +1727,38 @@
         const interval = setInterval(() => {
           i++;
           if (i > 3) { clearInterval(interval); return; }
-          setStage(i);
+          animateTo(i / (stages.length - 1), 600);
         }, 1100);
       }
     });
   }, { threshold: 0.45 });
   specObs.observe(document.querySelector('.spectrum'));
+
+  // ---- HAMBURGER MENU ----
+  const navToggle = document.getElementById('navToggle');
+  const navDrawer = document.getElementById('navDrawer');
+  if (navToggle && navDrawer) {
+    const closeMenu = () => {
+      navToggle.classList.remove('open');
+      navDrawer.classList.remove('open');
+      navToggle.setAttribute('aria-expanded', 'false');
+      navDrawer.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+    navToggle.addEventListener('click', () => {
+      const isOpen = navToggle.classList.toggle('open');
+      navDrawer.classList.toggle('open', isOpen);
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+      navDrawer.setAttribute('aria-hidden', String(!isOpen));
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    });
+    navDrawer.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && navToggle.classList.contains('open')) closeMenu();
+    });
+  }
 
   // SCROLL PROGRESS
   const progress = document.getElementById('scrollProgress');
