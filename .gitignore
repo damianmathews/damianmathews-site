@@ -1,0 +1,22 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Local env / dev
+.env
+.env.local
+node_modules/
+
+# Netlify
+.netlify/
+
+# Logs
+*.log
+npm-debug.log*

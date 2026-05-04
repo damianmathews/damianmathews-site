@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Damian Mathews — AI implementation, end to end</title>
+<meta name="description" content="I help businesses move from AI-curious to AI-native. Process discovery, custom builds, team training, ongoing partnership." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0a0806;
+    --bg-2: #110d09;
+    --bg-3: #1a140e;
+    --ink: #ece2cb;
+    --ink-soft: #a59a82;
+    --ink-mute: #5d5546;
+    --rule: #29221a;
+    --rule-strong: #3a3024;
+    --copper: #db6f2c;
+    --copper-bright: #f0853e;
+    --copper-soft: rgba(219, 111, 44, 0.12);
+    --easing: cubic-bezier(0.65, 0, 0.35, 1);
+    --easing-out: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; background: var(--bg); }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  @media (max-width: 900px) { body { cursor: auto; } }
+
+  ::selection { background: var(--copper); color: var(--bg); }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed; width: 8px; height: 8px;
+    background: var(--copper); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transition: transform 0.15s var(--easing-out), width 0.25s ease, height 0.25s ease, background 0.25s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed; width: 36px; height: 36px;
+    border: 1px solid rgba(219, 111, 44, 0.4); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transition: transform 0.4s var(--easing-out), width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    transform: translate(-50%, -50%);
+  }
+  .cursor.hover { width: 14px; height: 14px; background: var(--copper-bright); }
+  .cursor-ring.hover { width: 56px; height: 56px; border-color: var(--copper); }
+
+  /* GRAIN OVERLAY */
+  .grain {
+    position: fixed; inset: 0; pointer-events: none;
+    opacity: 0.05; z-index: 200; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .ambient {
+    position: fixed; top: -20%; right: -10%;
+    width: 60vw; height: 60vw;
+    background: radial-gradient(circle, rgba(219, 111, 44, 0.08) 0%, transparent 60%);
+    pointer-events: none; z-index: 0; filter: blur(60px);
+  }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 0 40px; position: relative; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    backdrop-filter: blur(14px) saturate(140%);
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    background: rgba(10, 8, 6, 0.72);
+    border-bottom: 1px solid var(--rule);
+  }
+  nav .wrap { display: flex; justify-content: space-between; align-items: center; padding-top: 18px; padding-bottom: 18px; }
+  .mark { font-family: 'IBM Plex Mono', monospace; font-size: 13px; letter-spacing: 0.04em; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 10px; }
+  .mark-dot { width: 6px; height: 6px; background: var(--copper); border-radius: 50%; animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 0.4; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.15); } }
+  .nav-links { display: flex; gap: 36px; align-items: center; }
+  .nav-links a { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-soft); text-decoration: none; letter-spacing: 0.04em; transition: color 0.2s ease; }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links a.cta { color: var(--ink); border: 1px solid var(--rule-strong); padding: 10px 18px; transition: all 0.2s ease; }
+  .nav-links a.cta:hover { border-color: var(--copper); color: var(--copper); }
+  @media (max-width: 720px) { .nav-links { gap: 16px; } .nav-links a:not(.cta) { display: none; } .wrap { padding: 0 24px; } }
+
+  /* HERO */
+  .hero { min-height: 100vh; display: flex; align-items: center; padding: 140px 0 80px; position: relative; z-index: 1; }
+  .hero-meta { display: flex; gap: 32px; align-items: center; margin-bottom: 56px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.22em; opacity: 0; animation: fadeUp 0.9s var(--easing-out) 0.1s forwards; flex-wrap: wrap; }
+  .hero-meta .pin { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-soft); }
+  .hero-meta .pin svg { width: 11px; height: 11px; }
+  .hero-meta .divider { width: 1px; height: 12px; background: var(--rule-strong); }
+  .hero-meta .status { display: inline-flex; align-items: center; gap: 8px; }
+  .hero-meta .status::before { content: ''; width: 6px; height: 6px; background: var(--copper); border-radius: 50%; box-shadow: 0 0 8px var(--copper); animation: pulse 2s ease-in-out infinite; }
+
+  h1 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(46px, 8.5vw, 124px); line-height: 0.96; letter-spacing: -0.035em; margin-bottom: 56px; max-width: 1200px; }
+  h1 .reveal-word { display: inline-block; overflow: hidden; vertical-align: top; }
+  h1 .reveal-word span { display: inline-block; transform: translateY(110%); animation: revealUp 1s var(--easing-out) forwards; }
+  h1 .italic { font-style: italic; font-weight: 300; color: var(--ink-soft); }
+  h1 .copper { color: var(--copper); font-style: italic; font-weight: 300; }
+  @keyframes revealUp { to { transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero-sub { font-size: clamp(19px, 1.6vw, 23px); line-height: 1.5; color: var(--ink-soft); max-width: 720px; margin-bottom: 56px; opacity: 0; animation: fadeUp 1s var(--easing-out) 1s forwards; }
+  .hero-sub strong { color: var(--ink); font-weight: 500; }
+
+  .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; opacity: 0; animation: fadeUp 1s var(--easing-out) 1.2s forwards; }
+  .btn { font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-decoration: none; padding: 16px 26px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 12px; letter-spacing: 0.04em; position: relative; overflow: hidden; border: none; cursor: none; }
+  @media (max-width: 900px) { .btn { cursor: pointer; } }
+  .btn-primary { background: var(--copper); color: var(--bg); }
+  .btn-primary::before { content: ''; position: absolute; inset: 0; background: var(--copper-bright); transform: translateY(100%); transition: transform 0.4s var(--easing-out); z-index: 0; }
+  .btn-primary:hover::before { transform: translateY(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-ghost { color: var(--ink); border: 1px solid var(--rule-strong); }
+  .btn-ghost:hover { border-color: var(--ink-soft); background: var(--bg-2); }
+  .btn .arrow { transition: transform 0.3s var(--easing-out); position: relative; z-index: 1; }
+  .btn:hover .arrow { transform: translateX(5px); }
+
+  .scroll-cue { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-mute); letter-spacing: 0.3em; text-transform: uppercase; display: flex; flex-direction: column; align-items: center; gap: 14px; opacity: 0; animation: fadeUp 1s var(--easing-out) 1.5s forwards; }
+  .scroll-cue::after { content: ''; width: 1px; height: 50px; background: linear-gradient(to bottom, var(--copper), transparent); animation: scrollLine 2s ease-in-out infinite; }
+  @keyframes scrollLine { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  /* SECTION */
+  section { padding: 140px 0; border-top: 1px solid var(--rule); position: relative; z-index: 1; }
+  .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.24em; margin-bottom: 48px; display: flex; align-items: center; gap: 16px; }
+  .section-label .num { color: var(--copper); }
+  .section-label .line { flex: 0 0 60px; height: 1px; background: var(--rule-strong); }
+  h2 { font-family: 'Fraunces', serif; font-weight: 400; font-size: clamp(38px, 5.5vw, 68px); line-height: 1.04; letter-spacing: -0.025em; margin-bottom: 40px; max-width: 980px; }
+  h2 .italic { font-style: italic; color: var(--ink-soft); font-weight: 300; }
+  h2 .copper { color: var(--copper); font-style: italic; font-weight: 300; }
+  .lede { font-size: 21px; line-height: 1.55; color: var(--ink-soft); max-width: 760px; margin-bottom: 32px; }
+  .lede strong { color: var(--ink); font-weight: 500; }
+
+  /* THESIS */
+  .thesis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 80px; align-items: start; }
+  .thesis-stat { border-left: 1px solid var(--rule-strong); padding-left: 32px; padding-bottom: 24px; }
+  .thesis-stat + .thesis-stat { margin-top: 32px; }
+  .thesis-stat-num { font-family: 'Fraunces', serif; font-weight: 300; font-size: clamp(48px, 6vw, 84px); line-height: 1; color: var(--copper); margin-bottom: 12px; }
+  .thesis-stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 16px; }
+  .thesis-stat-body { font-size: 16px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 900px) { .thesis-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+  /* SERVICES */
+  .services { margin-top: 60px; border-top: 1px solid var(--rule); }
+  .service { display: grid; grid-template-columns: 80px 1fr 1.6fr; gap: 40px; padding: 44px 0; border-bottom: 1px solid var(--rule); align-items: start; transition: padding 0.5s var(--easing-out), background 0.5s ease; position: relative; }
+  .service::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--copper); transition: width 0.4s var(--easing-out); }
+  .service:hover { padding-left: 24px; background: linear-gradient(to right, var(--copper-soft), transparent 60%); }
+  .service:hover::before { width: 3px; }
+  .service-num { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--ink-mute); padding-top: 10px; letter-spacing: 0.05em; }
+  .service:hover .service-num { color: var(--copper); }
+  .service-title { font-family: 'Fraunces', serif; font-size: clamp(28px, 3vw, 38px); font-weight: 400; letter-spacing: -0.015em; line-height: 1.1; }
+  .service-title .italic { font-style: italic; color: var(--ink-soft); font-weight: 300; }
+  .service-desc { font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
+  .service-desc strong { color: var(--ink); font-weight: 500; }
+  .service-tags { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+  .service-tag { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); border: 1px solid var(--rule-strong); padding: 4px 10px; border-radius: 999px; letter-spacing: 0.04em; }
+  @media (max-width: 800px) { .service { grid-template-columns: 50px 1fr; gap: 16px; } .service-desc { grid-column: 1 / -1; margin-top: 8px; } }
+
+  /* PROCESS */
+  .process-track { margin-top: 80px; position: relative; }
+  .process-line { position: absolute; top: 30px; left: 0; right: 0; height: 1px; background: var(--rule-strong); z-index: 0; }
+  .process-line-fill { position: absolute; top: 30px; left: 0; height: 1px; background: var(--copper); z-index: 1; width: 0; transition: width 1.2s var(--easing-out); }
+  .process-track.in .process-line-fill { width: 100%; }
+  .process-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 32px; position: relative; z-index: 2; }
+  .process-step { display: flex; flex-direction: column; gap: 16px; }
+  .process-marker { width: 60px; height: 60px; border: 1px solid var(--rule-strong); background: var(--bg); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 22px; color: var(--ink-soft); transition: all 0.4s var(--easing-out); margin-bottom: 12px; }
+  .process-step:hover .process-marker { border-color: var(--copper); color: var(--copper); transform: scale(1.08); }
+  .process-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.16em; }
+  .process-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 400; line-height: 1.15; letter-spacing: -0.01em; }
+  .process-desc { font-size: 15px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 1000px) { .process-grid { grid-template-columns: 1fr 1fr; gap: 40px; } .process-line, .process-line-fill { display: none; } }
+  @media (max-width: 600px) { .process-grid { grid-template-columns: 1fr; } }
+
+  /* CAPABILITIES */
+  .capabilities { margin-top: 60px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .capability { background: var(--bg); padding: 36px 32px; transition: background 0.3s ease; cursor: none; position: relative; overflow: hidden; }
+  @media (max-width: 900px) { .capability { cursor: pointer; } }
+  .capability:hover { background: var(--bg-2); }
+  .capability::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 1px; background: var(--copper); transition: width 0.5s var(--easing-out); }
+  .capability:hover::after { width: 100%; }
+  .capability-icon { width: 28px; height: 28px; color: var(--copper); margin-bottom: 24px; transition: transform 0.4s var(--easing-out); }
+  .capability:hover .capability-icon { transform: scale(1.15) rotate(-3deg); }
+  .capability h3 { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 10px; line-height: 1.2; }
+  .capability p { font-size: 14px; line-height: 1.55; color: var(--ink-soft); }
+  @media (max-width: 1000px) { .capabilities { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .capabilities { grid-template-columns: 1fr; } }
+
+  /* SPECTRUM */
+  .spectrum { margin-top: 80px; background: var(--bg-2); border: 1px solid var(--rule); padding: 48px; position: relative; }
+  .spectrum-header { display: flex; justify-content: space-between; align-items: end; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
+  .spectrum-title { font-family: 'Fraunces', serif; font-size: 26px; font-weight: 400; line-height: 1.2; letter-spacing: -0.01em; }
+  .spectrum-title .italic { font-style: italic; color: var(--ink-soft); }
+  .spectrum-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; }
+  .spectrum-track { position: relative; padding: 32px 0 16px; }
+  .spectrum-bar { height: 2px; background: var(--rule-strong); position: relative; border-radius: 2px; cursor: none; }
+  @media (max-width: 900px) { .spectrum-bar { cursor: pointer; } }
+  .spectrum-bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(to right, var(--copper) 0%, var(--copper-bright) 100%); border-radius: 2px; transition: width 0.4s var(--easing-out); }
+  .spectrum-handle { position: absolute; top: 50%; width: 24px; height: 24px; background: var(--copper); border-radius: 50%; transform: translate(-50%, -50%); cursor: grab; box-shadow: 0 0 0 6px rgba(219, 111, 44, 0.15), 0 0 20px rgba(219, 111, 44, 0.4); transition: left 0.4s var(--easing-out), box-shadow 0.2s ease; }
+  .spectrum-handle:hover { box-shadow: 0 0 0 10px rgba(219, 111, 44, 0.2), 0 0 30px rgba(219, 111, 44, 0.5); }
+  .spectrum-handle:active { cursor: grabbing; }
+  .spectrum-stops { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 28px; position: relative; }
+  .spectrum-stop { text-align: left; padding-right: 16px; cursor: none; }
+  @media (max-width: 900px) { .spectrum-stop { cursor: pointer; } }
+  .spectrum-stop-mark { width: 8px; height: 8px; background: var(--rule-strong); border-radius: 50%; margin-bottom: 12px; transition: background 0.3s ease; }
+  .spectrum-stop.active .spectrum-stop-mark { background: var(--copper); }
+  .spectrum-stop-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 8px; transition: color 0.3s ease; }
+  .spectrum-stop.active .spectrum-stop-label { color: var(--copper); }
+  .spectrum-stop-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .spectrum-display { margin-top: 48px; padding: 32px; background: var(--bg); border: 1px solid var(--rule); min-height: 180px; position: relative; }
+  .spectrum-display-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--copper); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 14px; }
+  .spectrum-example { font-family: 'Fraunces', serif; font-size: 22px; line-height: 1.4; font-weight: 400; letter-spacing: -0.005em; margin-bottom: 12px; transition: opacity 0.3s ease; }
+  .spectrum-example .italic { font-style: italic; color: var(--ink-soft); }
+  .spectrum-detail { font-size: 15px; color: var(--ink-soft); line-height: 1.6; transition: opacity 0.3s ease; }
+  @media (max-width: 700px) { .spectrum { padding: 28px 20px; } .spectrum-stops { grid-template-columns: repeat(2, 1fr); gap: 16px; } }
+
+  /* STACK */
+  .stack-intro { margin-bottom: 60px; }
+  .stack-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
+  .stack-item { background: var(--bg); padding: 28px 24px; transition: background 0.3s ease; }
+  .stack-item:hover { background: var(--bg-2); }
+  .stack-item-cat { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--copper); text-transform: uppercase; letter-spacing: 0.18em; margin-bottom: 10px; }
+  .stack-item-name { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .stack-item-note { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.02em; }
+
+  /* ABOUT */
+  .about { display: grid; grid-template-columns: 1fr 1.6fr; gap: 80px; margin-top: 60px; align-items: start; }
+  .about-portrait { aspect-ratio: 4 / 5; background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%); border: 1px solid var(--rule-strong); position: relative; overflow: hidden; }
+  .about-portrait::before { content: 'D.M.'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: clamp(80px, 10vw, 140px); color: var(--rule-strong); }
+  .about-portrait::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 20%, rgba(219, 111, 44, 0.06), transparent 60%); }
+  .about-portrait-tag { position: absolute; bottom: 20px; left: 20px; right: 20px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; display: flex; justify-content: space-between; z-index: 2; }
+  .about-body { font-size: 19px; line-height: 1.65; color: var(--ink); max-width: 720px; }
+  .about-body p + p { margin-top: 22px; }
+  .about-body em { color: var(--ink-soft); font-style: italic; }
+  .about-meta { margin-top: 40px; border-top: 1px solid var(--rule); padding-top: 28px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px; }
+  .about-meta-row { display: flex; flex-direction: column; gap: 6px; }
+  .about-meta-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; }
+  .about-meta-value { font-family: 'Fraunces', serif; font-size: 16px; color: var(--ink); }
+  @media (max-width: 900px) { .about { grid-template-columns: 1fr; gap: 40px; } .about-meta { grid-template-columns: 1fr; gap: 18px; } }
+
+  /* FAQ */
+  .faq { margin-top: 60px; border-top: 1px solid var(--rule); }
+  .faq-item { border-bottom: 1px solid var(--rule); cursor: none; }
+  @media (max-width: 900px) { .faq-item { cursor: pointer; } }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 32px 0; transition: padding 0.3s ease; }
+  .faq-item:hover .faq-q { padding-left: 16px; }
+  .faq-q-text { font-family: 'Fraunces', serif; font-size: clamp(20px, 2.2vw, 26px); font-weight: 400; letter-spacing: -0.01em; line-height: 1.25; flex: 1; padding-right: 32px; }
+  .faq-toggle { width: 36px; height: 36px; border: 1px solid var(--rule-strong); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease; position: relative; }
+  .faq-item:hover .faq-toggle { border-color: var(--copper); }
+  .faq-toggle::before, .faq-toggle::after { content: ''; position: absolute; background: var(--ink-soft); transition: all 0.3s var(--easing-out); }
+  .faq-toggle::before { width: 12px; height: 1px; }
+  .faq-toggle::after { width: 1px; height: 12px; }
+  .faq-item.open .faq-toggle::after { transform: scaleY(0); }
+  .faq-item.open .faq-toggle { background: var(--copper); border-color: var(--copper); }
+  .faq-item.open .faq-toggle::before, .faq-item.open .faq-toggle::after { background: var(--bg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--easing-out), padding 0.5s var(--easing-out); padding-bottom: 0; }
+  .faq-item.open .faq-a { max-height: 400px; padding-bottom: 32px; }
+  .faq-item:hover.open .faq-a { padding-left: 16px; }
+  .faq-a-text { font-size: 17px; line-height: 1.65; color: var(--ink-soft); max-width: 760px; }
+  .faq-a-text strong { color: var(--ink); font-weight: 500; }
+
+  /* CONTACT */
+  .contact { padding: 160px 0; border-top: 1px solid var(--rule); background: var(--bg-2); position: relative; }
+  .contact::before { content: ''; position: absolute; top: 0; left: 50%; width: 50vw; height: 50vw; max-width: 700px; max-height: 700px; background: radial-gradient(circle, rgba(219, 111, 44, 0.08), transparent 60%); transform: translate(-50%, -50%); pointer-events: none; filter: blur(40px); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; position: relative; }
+  .contact-line { font-family: 'Fraunces', serif; font-size: clamp(36px, 4.5vw, 60px); line-height: 1.05; font-weight: 400; letter-spacing: -0.022em; margin-bottom: 40px; }
+  .contact-line .italic { font-style: italic; color: var(--ink-soft); font-weight: 300; }
+  .contact-line .copper { color: var(--copper); font-style: italic; font-weight: 300; }
+  .contact-direct { font-size: 17px; color: var(--ink-soft); line-height: 1.6; margin-bottom: 32px; max-width: 480px; }
+  .contact-email { font-family: 'IBM Plex Mono', monospace; font-size: 18px; color: var(--copper); text-decoration: none; border-bottom: 1px solid var(--rule-strong); padding-bottom: 6px; transition: border-color 0.3s ease; display: inline-flex; align-items: center; gap: 10px; }
+  .contact-email:hover { border-color: var(--copper); }
+  .calendly-wrap { background: var(--bg); border: 1px solid var(--rule); min-height: 640px; overflow: hidden; position: relative; }
+  .calendly-header { padding: 20px 24px; border-bottom: 1px solid var(--rule); display: flex; justify-content: space-between; align-items: center; }
+  .calendly-header-title { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; }
+  .calendly-header-status { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--copper); display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.16em; }
+  .calendly-header-status::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--copper); box-shadow: 0 0 8px var(--copper); }
+  .calendly-iframe { width: 100%; height: 580px; border: none; background: var(--bg); display: block; }
+  @media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 60px; } }
+
+  /* FOOTER */
+  footer { padding: 48px 0 32px; border-top: 1px solid var(--rule); background: var(--bg); }
+  .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr; gap: 40px; margin-bottom: 32px; }
+  .footer-grid .col-title { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.22em; margin-bottom: 16px; }
+  footer p, footer a { font-size: 15px; color: var(--ink-soft); text-decoration: none; line-height: 1.7; }
+  .footer-grid .brand { font-family: 'Fraunces', serif; font-size: 22px; color: var(--ink); margin-bottom: 12px; }
+  .footer-grid .brand .copper { color: var(--copper); font-style: italic; }
+  footer ul { list-style: none; }
+  footer a:hover { color: var(--ink); }
+  .footer-bottom { border-top: 1px solid var(--rule); padding-top: 24px; }
+  .footer-bottom-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .footer-bottom p { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); letter-spacing: 0.04em; }
+  @media (max-width: 800px) { .footer-grid { grid-template-columns: 1fr; gap: 32px; } .footer-bottom-row { flex-direction: column; align-items: flex-start; } }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 1s var(--easing-out), transform 1s var(--easing-out); }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* TICKER */
+  .ticker { overflow: hidden; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 22px 0; background: var(--bg); position: relative; z-index: 1; }
+  .ticker-track { display: flex; gap: 56px; white-space: nowrap; animation: scroll 50s linear infinite; align-items: center; }
+  .ticker-item { font-family: 'Fraunces', serif; font-style: italic; font-weight: 300; font-size: 28px; color: var(--ink-soft); display: flex; align-items: center; gap: 56px; flex-shrink: 0; }
+  .ticker-item::after { content: ''; width: 6px; height: 6px; background: var(--copper); border-radius: 50%; flex-shrink: 0; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  a, button { cursor: none; }
+  @media (max-width: 900px) { a, button { cursor: pointer; } }
+</style>
+</head>
+<body>
+
+<div class="cursor"></div>
+<div class="cursor-ring"></div>
+<div class="grain"></div>
+<div class="ambient"></div>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="mark"><span class="mark-dot"></span>DAMIAN MATHEWS</a>
+    <div class="nav-links">
+      <a href="#what">What I do</a>
+      <a href="#process">Process</a>
+      <a href="#about">About</a>
+      <a href="#contact" class="cta">Book a call</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-meta">
+      <span class="pin">
+        <svg viewBox="0 0 12 12" fill="currentColor"><path d="M6 0a4 4 0 0 0-4 4c0 3 4 8 4 8s4-5 4-8a4 4 0 0 0-4-4zm0 5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+        Boston, MA
+      </span>
+      <span class="divider"></span>
+      <span class="status">Currently taking on 2 to 3 new engagements</span>
+    </div>
+
+    <h1>
+      <span class="reveal-word"><span style="animation-delay: 0.2s;">Your</span></span>
+      <span class="reveal-word"><span style="animation-delay: 0.28s;">business</span></span>
+      <span class="reveal-word"><span style="animation-delay: 0.36s;">runs</span></span>
+      <span class="reveal-word"><span style="animation-delay: 0.44s;">on</span></span>
+      <span class="reveal-word"><span style="animation-delay: 0.52s;">work</span></span>
+      <br />
+      <span class="reveal-word"><span class="italic" style="animation-delay: 0.6s;">that</span></span>
+      <span class="reveal-word"><span class="italic" style="animation-delay: 0.68s;">could</span></span>
+      <span class="reveal-word"><span class="italic" style="animation-delay: 0.76s;">be</span></span>
+      <span class="reveal-word"><span class="copper" style="animation-delay: 0.84s;">running</span></span>
+      <span class="reveal-word"><span class="copper" style="animation-delay: 0.92s;">itself.</span></span>
+    </h1>
+
+    <p class="hero-sub">
+      I sit inside your business for a few weeks, learn how the work gets done, and find the parts that AI should be doing instead. <strong>Then I build it.</strong> Then I train your team to own it. Then we figure out what's next.
+    </p>
+
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary"><span>Book a call</span> <span class="arrow">→</span></a>
+      <a href="#what" class="btn btn-ghost">See how I work <span class="arrow">↓</span></a>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">Process discovery</div>
+    <div class="ticker-item">Custom AI builds</div>
+    <div class="ticker-item">Team training</div>
+    <div class="ticker-item">Workflow automation</div>
+    <div class="ticker-item">Internal assistants</div>
+    <div class="ticker-item">Document pipelines</div>
+    <div class="ticker-item">Ongoing partnership</div>
+    <div class="ticker-item">Process discovery</div>
+    <div class="ticker-item">Custom AI builds</div>
+    <div class="ticker-item">Team training</div>
+    <div class="ticker-item">Workflow automation</div>
+    <div class="ticker-item">Internal assistants</div>
+    <div class="ticker-item">Document pipelines</div>
+    <div class="ticker-item">Ongoing partnership</div>
+  </div>
+</div>
+
+<section id="thesis">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">01</span> The pattern</div>
+    <h2>Most companies bolted AI onto a few jobs and stopped. <span class="italic">There's a lot more to do.</span></h2>
+    <p class="lede">
+      Every business I've worked inside has the same shape. A handful of people use ChatGPT to draft emails. A team or two has a Copilot license. Maybe someone built a chatbot. Then the work plateaus, because the people who can see what to build next are not the people doing the day-to-day work.
+    </p>
+    <p class="lede">
+      The interesting part of AI in 2026 is not the models. It's the connective tissue. Pulling data from one system, drafting in another, summarizing a meeting, routing a decision, watching for an event, kicking off a workflow. <strong>Most of what your team does in a week is a candidate for this.</strong> The job is to find which parts, build them carefully, and bring the team along.
+    </p>
+
+    <div class="thesis-grid">
+      <div>
+        <div class="thesis-stat">
+          <div class="thesis-stat-num">01</div>
+          <div class="thesis-stat-label">Discovery</div>
+          <div class="thesis-stat-body">I learn how your business runs by watching it run. Sit in on calls, shadow a few roles, look at your tools and data, talk to the people doing the work. The output is a written map of where AI fits and what to build first.</div>
+        </div>
+        <div class="thesis-stat">
+          <div class="thesis-stat-num">02</div>
+          <div class="thesis-stat-label">Build</div>
+          <div class="thesis-stat-body">I build the system. Real working tools that plug into the work your team already does. Not a demo. Not a slide. Something that gets used on Monday morning and saves time by Friday.</div>
+        </div>
+      </div>
+      <div>
+        <div class="thesis-stat">
+          <div class="thesis-stat-num">03</div>
+          <div class="thesis-stat-label">Training</div>
+          <div class="thesis-stat-body">I sit with the people who'll use it. Show them how, write down what I built, and stay in the room until they're confident. Adoption fails because nobody trains the team. I don't make that mistake.</div>
+        </div>
+        <div class="thesis-stat">
+          <div class="thesis-stat-num">04</div>
+          <div class="thesis-stat-label">Compound</div>
+          <div class="thesis-stat-body">Once one workflow is running on its own, the next is obvious. Most engagements grow into a roadmap. The end state is a business where the boring middle takes care of itself and your team focuses on work that needs a human.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="what">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">02</span> What I do</div>
+    <h2>Three ways an engagement starts. <span class="italic">Most grow into the next.</span></h2>
+    <p class="lede">
+      Pricing depends on scope, so we figure that out on a call. Every engagement starts with a free intro conversation. If we're a fit, we talk numbers. If we're not, I'll usually point you to someone who is.
+    </p>
+
+    <div class="services">
+      <div class="service">
+        <div class="service-num">/ 01</div>
+        <div><div class="service-title">The Audit</div></div>
+        <div>
+          <div class="service-desc">
+            Two to four weeks inside the business. I learn how the work flows, where the time goes, what your stack looks like, and what your team is already doing with AI. The deliverable is a written report: <strong>where AI fits, what to build first, what to leave alone, and what it'll take.</strong> You can run with it or roll into a build.
+          </div>
+          <div class="service-tags">
+            <span class="service-tag">Process mapping</span>
+            <span class="service-tag">AI fit assessment</span>
+            <span class="service-tag">Roadmap</span>
+            <span class="service-tag">Stack review</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-num">/ 02</div>
+        <div><div class="service-title">The Build</div></div>
+        <div>
+          <div class="service-desc">
+            Six to twelve weeks. I build what the audit pointed at. Could be an internal assistant trained on your data, a research and drafting workflow, a sales call summarizer, a document processing pipeline, an automation between three tools that nobody wants to wire up. <strong>I write the prompts, build the integrations, document the system, and train the team that'll own it.</strong> You get working software, not a deck.
+          </div>
+          <div class="service-tags">
+            <span class="service-tag">Internal AI tools</span>
+            <span class="service-tag">Workflow automation</span>
+            <span class="service-tag">Custom integrations</span>
+            <span class="service-tag">Documentation</span>
+            <span class="service-tag">Training</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="service">
+        <div class="service-num">/ 03</div>
+        <div><div class="service-title">Embedded</div></div>
+        <div>
+          <div class="service-desc">
+            A few hours a week, ongoing. I maintain the systems we built, add new ones as they come up, train new hires, and keep an eye on what's changing in the AI landscape that you should care about. <strong>The cheapest version of having a senior AI person on the team</strong>, without the full-time hire. Most builds graduate into this.
+          </div>
+          <div class="service-tags">
+            <span class="service-tag">Ongoing iteration</span>
+            <span class="service-tag">Maintenance</span>
+            <span class="service-tag">Team enablement</span>
+            <span class="service-tag">New builds</span>
+            <span class="service-tag">Strategy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="process">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">03</span> The engagement</div>
+    <h2>How a typical project moves. <span class="italic">Roughly.</span></h2>
+    <p class="lede">
+      Every engagement is shaped to the business, but the rough arc is the same. Five phases. Some get long, some are short. The whole thing usually lands somewhere between six and sixteen weeks for the first round, then settles into the embedded rhythm.
+    </p>
+
+    <div class="process-track">
+      <div class="process-line"></div>
+      <div class="process-line-fill"></div>
+      <div class="process-grid">
+        <div class="process-step">
+          <div class="process-marker">01</div>
+          <div class="process-label">Week 1</div>
+          <div class="process-title">Discovery</div>
+          <div class="process-desc">Sit in. Shadow. Watch the work. Ask questions. Read your docs. Look at your stack. By the end I know how things actually run.</div>
+        </div>
+        <div class="process-step">
+          <div class="process-marker">02</div>
+          <div class="process-label">Week 2</div>
+          <div class="process-title">Map</div>
+          <div class="process-desc">Written report of where AI fits. Each opportunity gets a priority, an effort estimate, and a sketch of what the build looks like.</div>
+        </div>
+        <div class="process-step">
+          <div class="process-marker">03</div>
+          <div class="process-label">Weeks 3 to 8</div>
+          <div class="process-title">Build</div>
+          <div class="process-desc">Pick the highest-leverage thing. Build it. Test with real users. Iterate. Ship something that gets used Monday and saves time by Friday.</div>
+        </div>
+        <div class="process-step">
+          <div class="process-marker">04</div>
+          <div class="process-label">Week 9</div>
+          <div class="process-title">Hand off</div>
+          <div class="process-desc">Train the team. Write the docs. Make sure the people who'll own the thing can run it without me. Set up metrics so we can see if it's working.</div>
+        </div>
+        <div class="process-step">
+          <div class="process-marker">05</div>
+          <div class="process-label">Ongoing</div>
+          <div class="process-title">Compound</div>
+          <div class="process-desc">Embedded retainer. New builds, maintenance, new hires trained, watching for what's changing in AI that you should care about.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="capabilities">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">04</span> What gets built</div>
+    <h2>The kinds of things I build inside businesses. <span class="italic">A short list.</span></h2>
+    <p class="lede">
+      No two projects are the same, but the patterns repeat. Each of these has shipped inside a real engagement. The shape changes, the underlying work doesn't.
+    </p>
+
+    <div class="capabilities">
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+        <h3>Document drafting systems</h3>
+        <p>Long-form documents (memos, reports, briefs) drafted from your inputs in your voice. Team reviews and finalizes. Hours collapse to minutes.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+        <h3>Internal AI assistants</h3>
+        <p>Trained on your documents, your data, your way of doing things. Available to your team in Slack, Teams, or a custom interface.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16M4 12h16M4 18h10"/><circle cx="20" cy="18" r="2"/></svg>
+        <h3>Meeting and call workflows</h3>
+        <p>Transcripts cleaned, summarized, action items pulled, and pushed into your CRM or task tracker. Post-meeting cleanup nobody wants to do.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <h3>Cross-tool automation</h3>
+        <p>Stitching your stack together. Email triggers a CRM update, which triggers a draft, which lands in your inbox for review. Removes the copy-paste tax.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12l4-4 4 4 4-4 6 6"/><path d="M3 18h18"/></svg>
+        <h3>Reporting automation</h3>
+        <p>Weekly reports, dashboards, status summaries pulled from multiple sources, written in plain English, in your inbox before Monday standup.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M3 12h18"/></svg>
+        <h3>Research pipelines</h3>
+        <p>Pull data from web, internal docs, broker research, transcripts. Synthesize. Output a structured first pass your analysts finish.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 8a3 3 0 0 1 6 0v8a3 3 0 0 1-6 0zM13 12h7M13 8h5"/></svg>
+        <h3>Onboarding and training</h3>
+        <p>Get your team using AI tools well. New hires up to speed faster. Fewer support tickets. The unsexy work that makes everything else stick.</p>
+      </div>
+      <div class="capability">
+        <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 1 1-14 0M12 5V2M12 22v-3"/></svg>
+        <h3>Custom internal tools</h3>
+        <p>The thing your team has been asking for that no SaaS vendor sells. Built fast, hosted simply, owned by you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="spectrum-section">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">05</span> The arc</div>
+    <h2>Every workflow lives somewhere on this line. <span class="italic">My job is to move them right.</span></h2>
+    <p class="lede">
+      Most processes start manual. Then someone uses ChatGPT for a piece of it. Then a real tool gets built. Then the tool runs on its own. The end goal isn't replacing your team. It's freeing them from the work that doesn't need them.
+    </p>
+
+    <div class="spectrum">
+      <div class="spectrum-header">
+        <div class="spectrum-title">From <span class="italic">manual</span> to <span class="italic">agentic.</span> Drag to explore.</div>
+        <div class="spectrum-meta">Interactive · 4 stages</div>
+      </div>
+
+      <div class="spectrum-track">
+        <div class="spectrum-bar">
+          <div class="spectrum-bar-fill" id="specFill"></div>
+          <div class="spectrum-handle" id="specHandle"></div>
+        </div>
+        <div class="spectrum-stops" id="specStops">
+          <div class="spectrum-stop active" data-stop="0"><div class="spectrum-stop-mark"></div><div class="spectrum-stop-label">Stage 01</div><div class="spectrum-stop-name">Manual</div></div>
+          <div class="spectrum-stop" data-stop="1"><div class="spectrum-stop-mark"></div><div class="spectrum-stop-label">Stage 02</div><div class="spectrum-stop-name">Assisted</div></div>
+          <div class="spectrum-stop" data-stop="2"><div class="spectrum-stop-mark"></div><div class="spectrum-stop-label">Stage 03</div><div class="spectrum-stop-name">Augmented</div></div>
+          <div class="spectrum-stop" data-stop="3"><div class="spectrum-stop-mark"></div><div class="spectrum-stop-label">Stage 04</div><div class="spectrum-stop-name">Agentic</div></div>
+        </div>
+      </div>
+
+      <div class="spectrum-display">
+        <div class="spectrum-display-label" id="specLabel">Stage 01 · Manual</div>
+        <div class="spectrum-example" id="specExample">A team member reads the documents, takes notes, drafts the output by hand. <span class="italic">It works. It's slow.</span></div>
+        <div class="spectrum-detail" id="specDetail">Most companies start here. The work is real, the people are real, but most of the keystrokes are mechanical. The slow part isn't the thinking, it's the typing, the copying, the formatting, the cleanup.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">06</span> The stack</div>
+    <h2>What I work with, day to day.</h2>
+    <div class="stack-intro">
+      <p class="lede">
+        Tool-agnostic but opinionated. I'll work with whatever your business already runs on, and recommend additions when they earn their place. The list below is what I reach for most often. <strong>The right tool depends on the job.</strong>
+      </p>
+    </div>
+
+    <div class="stack-grid">
+      <div class="stack-item"><div class="stack-item-cat">Frontier model</div><div class="stack-item-name">Claude</div><div class="stack-item-note">Anthropic · primary</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Frontier model</div><div class="stack-item-name">GPT</div><div class="stack-item-note">OpenAI · when fit</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Agentic</div><div class="stack-item-name">Claude Code</div><div class="stack-item-note">Build pipelines</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Protocol</div><div class="stack-item-name">MCP</div><div class="stack-item-note">Tool integrations</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Automation</div><div class="stack-item-name">n8n</div><div class="stack-item-note">Self-hosted flows</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Automation</div><div class="stack-item-name">Make.com</div><div class="stack-item-note">No-code routing</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Hosting</div><div class="stack-item-name">Vercel</div><div class="stack-item-note">Apps and APIs</div></div>
+      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">Dynamics 365</div><div class="stack-item-note">Microsoft stack</div></div>
+      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">HubSpot</div><div class="stack-item-note">Marketing-led orgs</div></div>
+      <div class="stack-item"><div class="stack-item-cat">CRM</div><div class="stack-item-name">Salesforce</div><div class="stack-item-note">Enterprise</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Microsoft 365</div><div class="stack-item-note">Teams, SharePoint</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Workspace</div><div class="stack-item-name">Google Workspace</div><div class="stack-item-note">Drive, Gmail</div></div>
+      <div class="stack-item"><div class="stack-item-cat">CMS</div><div class="stack-item-name">WordPress</div><div class="stack-item-note">Marketing sites</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Development</div><div class="stack-item-name">React, Next.js</div><div class="stack-item-note">Custom apps</div></div>
+      <div class="stack-item"><div class="stack-item-cat">Data</div><div class="stack-item-name">Python, SQL</div><div class="stack-item-note">Glue and pipelines</div></div>
+      <div class="stack-item"><div class="stack-item-cat">More</div><div class="stack-item-name">Whatever fits</div><div class="stack-item-note">Tool follows job</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">07</span> Who's behind this</div>
+    <h2>Damian Mathews. <span class="italic">Boston-based. Working everywhere.</span></h2>
+
+    <div class="about">
+      <div class="about-portrait">
+        <div class="about-portrait-tag"><span>BOSTON / 2026</span><span>D.M.</span></div>
+      </div>
+      <div>
+        <div class="about-body">
+          <p>I've spent the last few years building AI systems for real businesses. Asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
+          <p>Different industries, same shape every time. Find the bottleneck. Build the thing. Hand it back. The technology is the easy part. The hard part is sitting next to the operator long enough to understand what they actually need, and then building it carefully enough that they trust it on day one.</p>
+          <p>Background is in marketing and CRM, which turns out to be the right pre-AI training. Most of the value is in the boring middle of a company, where systems meet people and someone has to translate between them. <em>That's where I work.</em></p>
+        </div>
+
+        <div class="about-meta">
+          <div class="about-meta-row"><div class="about-meta-label">Based</div><div class="about-meta-value">Boston, MA</div></div>
+          <div class="about-meta-row"><div class="about-meta-label">Working with</div><div class="about-meta-value">Two clients · two slots open</div></div>
+          <div class="about-meta-row"><div class="about-meta-label">Reachable</div><div class="about-meta-value">Email · Calendly · LinkedIn</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">08</span> Common questions</div>
+    <h2>Things I get asked. <span class="italic">Mostly on the first call.</span></h2>
+
+    <div class="faq">
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">Does my team need to be technical to work with you?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">No. Most of the people I work with are operators, executives, analysts, and team leads. The point of bringing me in is so your team doesn't have to figure out the technical part. I do that. Your team's job is to tell me what their week looks like, what's annoying, and what they wish would just happen on its own. I take it from there.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">How do you handle sensitive data?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">Carefully. I work under NDA on every engagement. I use enterprise-grade plans that contractually exclude your data from model training. I'll redact identifying information before anything touches an AI tool when the situation calls for it, and for the strictest cases, we deploy on infrastructure you control. <strong>If your industry has specific compliance requirements (financial services, healthcare, legal), we scope around them on the first call.</strong></div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">What size company do you work with?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">Mostly between 10 and 500 employees. Small enough that decisions move and the people doing the work talk to me directly. Big enough that there's real complexity to work with. I've also done one-off projects for larger orgs and for solo operators when the project was the right shape. Size matters less than whether the work is buildable and the buyer is serious.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">How long is a typical engagement?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">An audit is two to four weeks. A build is six to twelve weeks for the first deliverable. Embedded engagements are ongoing, month to month, no long-term contract. Most clients start with a build and graduate into embedded once the first system is running. The point is to keep showing up as long as I'm earning my keep.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">What does it cost?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">Depends on scope. The intro call is free, and by the end of it I usually have enough to give you a real number. I don't publish prices because the variation is huge. Some audits are a few thousand dollars and some builds run into five figures over a few months. <strong>The right way to find out is a 30-minute call.</strong></div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">Do you build with one specific AI tool, or do you pick?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">I pick. Claude is what I reach for most often, but I use GPT, Gemini, and open-source models when they're the right fit for the job. The best tool depends on the work, the data, the budget, and what your team is already paying for. Part of what I bring is knowing which one to reach for and why.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">Can my team maintain what you build after you leave?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">That's the goal. Every build comes with documentation written for whoever's going to own it, plus a training walkthrough. Most clients keep me on an embedded retainer because they want me around to add new pieces and watch for what's changing in AI. The system is yours either way.</div></div></div>
+      <div class="faq-item"><div class="faq-q"><div class="faq-q-text">Do you work with companies outside Boston?</div><div class="faq-toggle"></div></div><div class="faq-a"><div class="faq-a-text">Yes. Most of my clients are remote. I'll fly in for kickoffs, key reviews, and training sessions when it matters. Discovery and build phases are mostly remote with regular video time. <strong>Geography hasn't been a constraint in years.</strong></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="section-label"><span class="line"></span><span class="num">09</span> Get in touch</div>
+    <div class="contact-grid">
+      <div>
+        <p class="contact-line">Tell me what's <span class="copper">broken</span>, what you've tried, and what you want it to look like when it works.</p>
+        <p class="contact-direct">Book a call on the right or send me an email. I read everything that comes in. If we're a fit, I'll write back inside a day with a time. If we're not, I'll usually say so and point you toward someone who is.</p>
+        <a href="mailto:hello@damianmathews.com" class="contact-email">hello@damianmathews.com <span>→</span></a>
+      </div>
+
+      <div class="calendly-wrap">
+        <div class="calendly-header">
+          <div class="calendly-header-title">Book a 30-minute intro</div>
+          <div class="calendly-header-status">Live</div>
+        </div>
+        <!-- CALENDLY EMBED: replace the src URL with your real Calendly link -->
+        <iframe class="calendly-iframe" src="https://calendly.com/damianmathews/intro?hide_event_type_details=1&background_color=0a0806&text_color=ece2cb&primary_color=db6f2c" title="Book a call with Damian Mathews" loading="lazy"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="brand">Damian<span class="copper">.</span></div>
+        <p>AI implementation, end to end. Process discovery, custom builds, team training, ongoing partnership. Based in Boston, working everywhere.</p>
+      </div>
+      <div>
+        <div class="col-title">Site</div>
+        <ul>
+          <li><a href="#thesis">The pattern</a></li>
+          <li><a href="#what">What I do</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="#capabilities">What gets built</a></li>
+          <li><a href="#stack">The stack</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="col-title">Get in touch</div>
+        <ul>
+          <li><a href="mailto:hello@damianmathews.com">hello@damianmathews.com</a></li>
+          <li><a href="#contact">Book a call</a></li>
+          <li><a href="#" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-row">
+        <p>© 2026 Damian Mathews. Boston, MA.</p>
+        <p>Built fast. Iterated faster.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // CUSTOM CURSOR
+  const cursor = document.querySelector('.cursor');
+  const ring = document.querySelector('.cursor-ring');
+  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+  let ringX = mouseX, ringY = mouseY;
+
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.18;
+    ringY += (mouseY - ringY) * 0.18;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('a, button, .service, .capability, .faq-item, .spectrum-stop, .spectrum-handle').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+  });
+
+  // SCROLL REVEAL
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('section h2, .lede, .service, .capability, .process-step, .stack-item, .about, .faq-item, .thesis-stat, .spectrum, .contact-grid > div').forEach(el => {
+    el.classList.add('reveal');
+    observer.observe(el);
+  });
+
+  // PROCESS LINE
+  const processTrack = document.querySelector('.process-track');
+  if (processTrack) {
+    const processObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          processTrack.classList.add('in');
+          processObs.unobserve(processTrack);
+        }
+      });
+    }, { threshold: 0.3 });
+    processObs.observe(processTrack);
+  }
+
+  // FAQ ACCORDION
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-q').addEventListener('click', () => {
+      const wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+      if (!wasOpen) item.classList.add('open');
+    });
+  });
+
+  // SPECTRUM SLIDER
+  const stages = [
+    {
+      label: 'Stage 01 · Manual',
+      example: 'A team member reads the documents, takes notes, drafts the output by hand. <span class="italic">It works. It\'s slow.</span>',
+      detail: 'Most companies start here. The work is real, the people are real, but most of the keystrokes are mechanical. The slow part isn\'t the thinking, it\'s the typing, the copying, the formatting, the cleanup.'
+    },
+    {
+      label: 'Stage 02 · Assisted',
+      example: 'The team member uses ChatGPT to help with sections. <span class="italic">Faster. Inconsistent.</span>',
+      detail: 'A real improvement, but unsystematic. Quality depends on who\'s using it and how. The tool is borrowed, not built. There\'s no shared prompt library, no integration with your data, no guardrails. Useful, but capped.'
+    },
+    {
+      label: 'Stage 03 · Augmented',
+      example: 'A custom system drafts the whole output from your inputs. The team reviews and finalizes. <span class="italic">Hours collapse to minutes.</span>',
+      detail: 'This is where most of my builds land. Real software, custom-built, plugged into your data and your tools. The team becomes the editor, not the writer. Quality goes up because the human is checking output instead of generating it from scratch.'
+    },
+    {
+      label: 'Stage 04 · Agentic',
+      example: 'The system runs on its own. It pulls inputs, drafts, routes, and notifies the team only when something needs a human. <span class="italic">The work runs itself.</span>',
+      detail: 'Not every workflow needs to get here. Most should. When a process is well-understood and the inputs are predictable, the system can take it the rest of the way. Your team\'s time goes to the parts that need judgment, relationships, and decisions.'
+    }
+  ];
+
+  const handle = document.getElementById('specHandle');
+  const fill = document.getElementById('specFill');
+  const stops = document.querySelectorAll('.spectrum-stop');
+  const labelEl = document.getElementById('specLabel');
+  const exampleEl = document.getElementById('specExample');
+  const detailEl = document.getElementById('specDetail');
+  let currentStage = 0;
+
+  function setStage(i) {
+    currentStage = i;
+    const pct = (i / (stages.length - 1)) * 100;
+    handle.style.left = pct + '%';
+    fill.style.width = pct + '%';
+    stops.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    exampleEl.style.opacity = '0';
+    detailEl.style.opacity = '0';
+    setTimeout(() => {
+      labelEl.textContent = stages[i].label;
+      exampleEl.innerHTML = stages[i].example;
+      detailEl.textContent = stages[i].detail;
+      exampleEl.style.opacity = '1';
+      detailEl.style.opacity = '1';
+    }, 200);
+  }
+
+  // Initialize handle position
+  handle.style.left = '0%';
+  fill.style.width = '0%';
+
+  stops.forEach(stop => {
+    stop.addEventListener('click', () => setStage(parseInt(stop.dataset.stop)));
+  });
+
+  let dragging = false;
+  const track = document.querySelector('.spectrum-bar');
+
+  function handleDrag(clientX) {
+    const rect = track.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+    const stage = Math.round(pct * (stages.length - 1));
+    if (stage !== currentStage) setStage(stage);
+  }
+
+  handle.addEventListener('mousedown', (e) => { dragging = true; e.preventDefault(); });
+  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('mousemove', (e) => { if (dragging) handleDrag(e.clientX); });
+
+  handle.addEventListener('touchstart', (e) => { dragging = true; });
+  document.addEventListener('touchend', () => { dragging = false; });
+  document.addEventListener('touchmove', (e) => { if (dragging) handleDrag(e.touches[0].clientX); });
+
+  track.addEventListener('click', (e) => handleDrag(e.clientX));
+
+  // Auto-advance the spectrum on entry once
+  let autoRan = false;
+  const specObs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting && !autoRan) {
+        autoRan = true;
+        let i = 0;
+        const interval = setInterval(() => {
+          i++;
+          if (i > 3) { clearInterval(interval); return; }
+          setStage(i);
+        }, 1100);
+      }
+    });
+  }, { threshold: 0.45 });
+  specObs.observe(document.querySelector('.spectrum'));
+</script>
+
+</body>
+</html>
