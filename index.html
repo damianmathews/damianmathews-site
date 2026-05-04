@@ -822,6 +822,59 @@
 
   /* Hero sub a touch smaller too */
   .hero-sub { font-size: clamp(16px, 1.25vw, 19px); max-width: 600px; }
+
+  /* ============================================================
+     V5 — HERO ANCHORED LEFT, TIGHTER TYPE
+     Kill auto-centering, drop h1 size, push orb off so text breathes.
+     ============================================================ */
+
+  .hero { padding: 110px 0 90px; align-items: center; }
+
+  .hero .wrap {
+    max-width: none;
+    margin: 0;
+    padding-left: clamp(20px, 1.6vw, 28px);
+    padding-right: clamp(20px, 3vw, 48px);
+  }
+
+  h1 {
+    font-size: clamp(38px, 4.4vw, 68px);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: 36px;
+  }
+  .hero h1 { max-width: min(820px, 62vw); }
+  h1 .reveal-word { display: inline-block; }
+
+  .hero-meta { margin-bottom: 40px; font-size: 10px; }
+  .hero-sub {
+    font-size: clamp(15px, 1.05vw, 17px);
+    line-height: 1.55;
+    max-width: 520px;
+    margin-bottom: 40px;
+  }
+  .hero-actions { gap: 12px; }
+  .hero .btn { padding: 14px 22px; font-size: 12px; }
+
+  /* Move the orb further off-screen so it stops crowding text */
+  .hero-orb {
+    right: -22vw;
+    width: 56vw;
+    max-width: 640px;
+  }
+  @media (max-width: 1180px) {
+    .hero-orb { right: -34vw; width: 70vw; }
+  }
+
+  /* Tighten contact too — was reading huge */
+  .contact-line { font-size: clamp(26px, 2.6vw, 38px); line-height: 1.15; }
+  .contact { padding: 120px 0; }
+
+  /* Section labels in hero meta — already tight, but mono spacing tweak */
+  .hero-meta { letter-spacing: 0.18em; }
+
+  /* Scroll cue — pull in tighter */
+  .scroll-cue { bottom: 32px; }
 </style>
 </head>
 <body>
