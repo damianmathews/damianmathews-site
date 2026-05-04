@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Damian Mathews — Automate the repetitive, boring, and costly</title>
-<meta name="description" content="Let's automate the repetitive, boring, or costly processes in your business — together. I learn how your work gets done, build the AI systems to take it off your plate, and train your team to own them. Low cost, high ROI." />
+<title>Damian Mathews · Automate the repetitive, boring, and costly</title>
+<meta name="description" content="Let's automate the repetitive, boring, or costly processes in your business together. I learn how your work gets done, build the AI systems to take it off your plate, and train your team to own them. Low cost, high ROI." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -877,32 +877,31 @@
   .scroll-cue { bottom: 32px; }
 
   /* ============================================================
-     V6 — HERO BALANCE
-     Center hero in a wide wrap so it shares the nav rail (no longer
-     pinned to the viewport edge). Bring the orb inboard so the empty
-     middle band closes up.
+     V7 — HERO ALIGNED WITH NAV
+     Use the exact same wrap as the nav (max-width 1240, margin auto,
+     padding 40) so hero text starts at the same x as DAMIAN MATHEWS.
+     Widen h1 so it fits on 2 lines. Position orb in the right column.
      ============================================================ */
 
   .hero .wrap {
-    max-width: 1320px;
+    max-width: 1240px;
     margin: 0 auto;
-    padding: 0 clamp(24px, 3vw, 48px);
+    padding: 0 40px;
   }
-  .hero h1 { max-width: min(700px, 58vw); }
-  .hero-sub { max-width: 500px; }
-  .hero-meta, .hero-actions { max-width: 700px; }
+  .hero h1 { max-width: min(820px, 60vw); }
+  .hero-sub { max-width: 480px; }
+  .hero-meta, .hero-actions { max-width: 820px; }
 
-  /* Orb pulled in tight to the text column on wide screens */
   .hero-orb {
-    right: 2vw;
-    width: 54vw;
-    max-width: 700px;
+    right: -8vw;
+    width: 50vw;
+    max-width: 600px;
   }
-  @media (max-width: 1400px) {
-    .hero-orb { right: -8vw; width: 60vw; }
+  @media (max-width: 1300px) {
+    .hero-orb { right: -16vw; }
   }
   @media (max-width: 1180px) {
-    .hero-orb { right: -28vw; width: 75vw; }
+    .hero-orb { right: -28vw; width: 70vw; opacity: 0.4; }
   }
   @media (max-width: 720px) {
     .hero-orb { display: none; }
@@ -972,7 +971,7 @@
     </h1>
 
     <p class="hero-sub">
-      Let's automate the <strong>repetitive, boring, or costly</strong> processes in your business — together. I learn how your work actually gets done, build the AI systems that take it off your plate, and teach your team to own them. <strong>Low cost, high ROI.</strong>
+      Let's automate the <strong>repetitive, boring, or costly</strong> processes in your business together. I learn how your work actually gets done, build the AI systems that take it off your plate, and teach your team to own them. <strong>Low cost, high ROI.</strong>
     </p>
 
     <div class="hero-actions">
@@ -1072,7 +1071,7 @@
         <div><div class="service-title">The Build</div></div>
         <div>
           <div class="service-desc">
-            Six to twelve weeks. I build what the audit pointed at — an internal assistant trained on your data, a research and drafting workflow, a sales call summarizer, a document processing pipeline, an automation between three tools nobody wants to wire up. <strong>I write the prompts, build the integrations, document the system, and train the team that'll own it.</strong> You get working software, not a deck.
+            Six to twelve weeks. I build what the audit pointed at: an internal assistant trained on your data, a research and drafting workflow, a sales call summarizer, a document processing pipeline, an automation between three tools nobody wants to wire up. <strong>I write the prompts, build the integrations, document the system, and train the team that'll own it.</strong> You get working software, not a deck.
           </div>
           <div class="service-tags">
             <span class="service-tag">Internal AI tools</span>
@@ -1168,17 +1167,17 @@
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>
         <h3>Internal AI assistants</h3>
-        <p>Trained on your documents, your data, your way of doing things — available in Slack, Teams, or a custom interface.</p>
+        <p>Trained on your documents, your data, your way of doing things. Available in Slack, Teams, or a custom interface.</p>
       </div>
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         <h3>Meeting and call workflows</h3>
-        <p>Transcripts cleaned, summarized, action items pulled and pushed into your CRM or task tracker — the post-meeting cleanup nobody wants to do.</p>
+        <p>Transcripts cleaned and summarized, action items pulled and pushed into your CRM or task tracker. The post-meeting cleanup nobody wants to do.</p>
       </div>
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></svg>
         <h3>Cross-tool automation</h3>
-        <p>Stitching your stack together. An email triggers a CRM update, which triggers a draft, which lands in your inbox for review — no more copy-paste tax.</p>
+        <p>Stitching your stack together. An email triggers a CRM update, which triggers a draft, which lands in your inbox for review. No more copy-paste tax.</p>
       </div>
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="m19 9-5 5-4-4-3 3"/></svg>
@@ -1193,12 +1192,12 @@
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z"/><path d="M22 10v6"/><path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5"/></svg>
         <h3>Onboarding and training</h3>
-        <p>Get your team using AI tools well, new hires up to speed faster, and fewer support tickets — the unsexy work that makes everything else stick.</p>
+        <p>Get your team using AI tools well, new hires up to speed faster, fewer support tickets. The unsexy work that makes everything else stick.</p>
       </div>
       <div class="capability">
         <svg class="capability-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         <h3>Custom internal tools</h3>
-        <p>The thing your team has been asking for that no SaaS vendor sells — built fast, hosted simply, owned by you.</p>
+        <p>The thing your team has been asking for that no SaaS vendor sells. Built fast, hosted simply, owned by you.</p>
       </div>
     </div>
   </div>
@@ -1278,8 +1277,8 @@
       </div>
       <div>
         <div class="about-body">
-          <p>I've spent the last few years building AI systems for real businesses — asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
-          <p>Different industries, same shape every time: find the bottleneck, build the thing, hand it back. The technology is the easy part — the hard part is sitting next to the operator long enough to understand what they actually need, then building it carefully enough that they trust it on day one.</p>
+          <p>I've spent the last few years building AI systems for real businesses: asset managers running due diligence, multi-location operators trying to scale without scaling headcount, marketing teams replacing drudge work with sharper output, founders who needed something built yesterday.</p>
+          <p>Different industries, same shape every time: find the bottleneck, build the thing, hand it back. The technology is the easy part. The hard part is sitting next to the operator long enough to understand what they actually need, then building it carefully enough that they trust it on day one.</p>
           <p>My background is in marketing and CRM, which turns out to be the right pre-AI training. <em>Most of the value is in the boring middle of a company, where systems meet people and someone has to translate between them.</em></p>
         </div>
 
@@ -1316,7 +1315,7 @@
     <div class="section-label"><span class="line"></span><span class="num">09</span> Get in touch</div>
     <div class="contact-grid">
       <div>
-        <p class="contact-line">Tell me what's <span class="copper">repetitive, boring, or costly</span> — I'll show you what AI can take off your plate.</p>
+        <p class="contact-line">Tell me what's <span class="copper">repetitive, boring, or costly</span>. I'll show you what AI can take off your plate.</p>
         <p class="contact-direct">Book a call on the right or send me an email. I read everything that comes in. If we're a fit, I'll write back inside a day with a time. If we're not, I'll usually say so and point you toward someone who is.</p>
         <a href="mailto:damianmathews9@gmail.com" class="contact-email">damianmathews9@gmail.com <span>→</span></a>
         <a href="tel:+16176782418" class="contact-email" style="margin-left: 24px;">(617) 678-2418 <span>↗</span></a>
