@@ -38,29 +38,28 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
-    cursor: none;
   }
-  @media (max-width: 900px) { body { cursor: auto; } }
 
   ::selection { background: var(--copper); color: var(--bg); }
 
-  /* CUSTOM CURSOR */
-  .cursor {
-    position: fixed; width: 8px; height: 8px;
-    background: var(--copper); border-radius: 50%;
-    pointer-events: none; z-index: 9999;
-    transition: transform 0.15s var(--easing-out), width 0.25s ease, height 0.25s ease, background 0.25s ease;
+  /* CURSOR GLOW — faint copper-tinted blur that follows the mouse */
+  .cursor-glow {
+    position: fixed; top: 0; left: 0;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(219, 111, 44, 0.18) 0%, rgba(219, 111, 44, 0.06) 35%, transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+    z-index: 50;
+    mix-blend-mode: screen;
     transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    will-change: transform;
   }
-  .cursor-ring {
-    position: fixed; width: 36px; height: 36px;
-    border: 1px solid rgba(219, 111, 44, 0.4); border-radius: 50%;
-    pointer-events: none; z-index: 9998;
-    transition: transform 0.4s var(--easing-out), width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
-    transform: translate(-50%, -50%);
-  }
-  .cursor.hover { width: 14px; height: 14px; background: var(--copper-bright); }
-  .cursor-ring.hover { width: 56px; height: 56px; border-color: var(--copper); }
+  .cursor-glow.show { opacity: 1; }
+  @media (max-width: 900px) { .cursor-glow { display: none; } }
+  @media (hover: none) { .cursor-glow { display: none; } }
 
   /* GRAIN OVERLAY */
   .grain {
@@ -118,8 +117,7 @@
   .hero-sub strong { color: var(--ink); font-weight: 500; }
 
   .hero-actions { display: flex; gap: 14px; flex-wrap: wrap; opacity: 0; animation: fadeUp 1s var(--easing-out) 1.2s forwards; }
-  .btn { font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-decoration: none; padding: 16px 26px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 12px; letter-spacing: 0.04em; position: relative; overflow: hidden; border: none; cursor: none; }
-  @media (max-width: 900px) { .btn { cursor: pointer; } }
+  .btn { font-family: 'IBM Plex Mono', monospace; font-size: 13px; text-decoration: none; padding: 16px 26px; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 12px; letter-spacing: 0.04em; position: relative; overflow: hidden; border: none; cursor: pointer; }
   .btn-primary { background: var(--copper); color: var(--bg); }
   .btn-primary::before { content: ''; position: absolute; inset: 0; background: var(--copper-bright); transform: translateY(100%); transition: transform 0.4s var(--easing-out); z-index: 0; }
   .btn-primary:hover::before { transform: translateY(0); }
@@ -186,8 +184,7 @@
 
   /* CAPABILITIES */
   .capabilities { margin-top: 60px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--rule); border: 1px solid var(--rule); }
-  .capability { background: var(--bg); padding: 36px 32px; transition: background 0.3s ease; cursor: none; position: relative; overflow: hidden; }
-  @media (max-width: 900px) { .capability { cursor: pointer; } }
+  .capability { background: var(--bg); padding: 36px 32px; transition: background 0.3s ease; position: relative; overflow: hidden; }
   .capability:hover { background: var(--bg-2); }
   .capability::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 1px; background: var(--copper); transition: width 0.5s var(--easing-out); }
   .capability:hover::after { width: 100%; }
@@ -205,15 +202,13 @@
   .spectrum-title .italic { font-style: italic; color: var(--ink-soft); }
   .spectrum-meta { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.18em; }
   .spectrum-track { position: relative; padding: 32px 0 16px; }
-  .spectrum-bar { height: 2px; background: var(--rule-strong); position: relative; border-radius: 2px; cursor: none; }
-  @media (max-width: 900px) { .spectrum-bar { cursor: pointer; } }
+  .spectrum-bar { height: 2px; background: var(--rule-strong); position: relative; border-radius: 2px; cursor: pointer; }
   .spectrum-bar-fill { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(to right, var(--copper) 0%, var(--copper-bright) 100%); border-radius: 2px; transition: width 0.4s var(--easing-out); }
   .spectrum-handle { position: absolute; top: 50%; width: 24px; height: 24px; background: var(--copper); border-radius: 50%; transform: translate(-50%, -50%); cursor: grab; box-shadow: 0 0 0 6px rgba(219, 111, 44, 0.15), 0 0 20px rgba(219, 111, 44, 0.4); transition: left 0.4s var(--easing-out), box-shadow 0.2s ease; }
   .spectrum-handle:hover { box-shadow: 0 0 0 10px rgba(219, 111, 44, 0.2), 0 0 30px rgba(219, 111, 44, 0.5); }
   .spectrum-handle:active { cursor: grabbing; }
   .spectrum-stops { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 28px; position: relative; }
-  .spectrum-stop { text-align: left; padding-right: 16px; cursor: none; }
-  @media (max-width: 900px) { .spectrum-stop { cursor: pointer; } }
+  .spectrum-stop { text-align: left; padding-right: 16px; cursor: pointer; }
   .spectrum-stop-mark { width: 8px; height: 8px; background: var(--rule-strong); border-radius: 50%; margin-bottom: 12px; transition: background 0.3s ease; }
   .spectrum-stop.active .spectrum-stop-mark { background: var(--copper); }
   .spectrum-stop-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-mute); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 8px; transition: color 0.3s ease; }
@@ -252,8 +247,7 @@
 
   /* FAQ */
   .faq { margin-top: 60px; border-top: 1px solid var(--rule); }
-  .faq-item { border-bottom: 1px solid var(--rule); cursor: none; }
-  @media (max-width: 900px) { .faq-item { cursor: pointer; } }
+  .faq-item { border-bottom: 1px solid var(--rule); cursor: pointer; }
   .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 32px 0; transition: padding 0.3s ease; }
   .faq-item:hover .faq-q { padding-left: 16px; }
   .faq-q-text { font-family: 'Fraunces', serif; font-size: clamp(20px, 2.2vw, 26px); font-weight: 400; letter-spacing: -0.01em; line-height: 1.25; flex: 1; padding-right: 32px; }
@@ -314,8 +308,7 @@
   .ticker-item::after { content: ''; width: 6px; height: 6px; background: var(--copper); border-radius: 50%; flex-shrink: 0; }
   @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 
-  a, button { cursor: none; }
-  @media (max-width: 900px) { a, button { cursor: pointer; } }
+  a, button { cursor: pointer; }
 
   /* ============================================================
      V2 — VISUAL OVERHAUL
@@ -608,8 +601,7 @@
 <body>
 
 <div class="scroll-progress" id="scrollProgress"></div>
-<div class="cursor"></div>
-<div class="cursor-ring"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
 <div class="grain"></div>
 <div class="mesh" aria-hidden="true">
   <div class="mesh-blob mesh-1"></div>
@@ -1073,31 +1065,28 @@
 </footer>
 
 <script>
-  // CUSTOM CURSOR
-  const cursor = document.querySelector('.cursor');
-  const ring = document.querySelector('.cursor-ring');
-  let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
-  let ringX = mouseX, ringY = mouseY;
+  // CURSOR GLOW — faint blur that lags slightly behind the mouse
+  const glow = document.getElementById('cursorGlow');
+  if (glow && window.matchMedia('(hover: hover)').matches) {
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+    let gx = mx, gy = my;
+    let shown = false;
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    cursor.style.left = mouseX + 'px';
-    cursor.style.top = mouseY + 'px';
-  });
+    document.addEventListener('mousemove', (e) => {
+      mx = e.clientX; my = e.clientY;
+      if (!shown) { glow.classList.add('show'); shown = true; }
+    }, { passive: true });
 
-  function animateRing() {
-    ringX += (mouseX - ringX) * 0.18;
-    ringY += (mouseY - ringY) * 0.18;
-    ring.style.left = ringX + 'px';
-    ring.style.top = ringY + 'px';
-    requestAnimationFrame(animateRing);
+    document.addEventListener('mouseleave', () => { glow.classList.remove('show'); shown = false; });
+
+    function tickGlow() {
+      gx += (mx - gx) * 0.18;
+      gy += (my - gy) * 0.18;
+      glow.style.transform = `translate(${gx}px, ${gy}px) translate(-50%, -50%)`;
+      requestAnimationFrame(tickGlow);
+    }
+    tickGlow();
   }
-  animateRing();
-
-  document.querySelectorAll('a, button, .service, .capability, .faq-item, .spectrum-stop, .spectrum-handle').forEach(el => {
-    el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
-    el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
-  });
 
   // SCROLL REVEAL
   const observer = new IntersectionObserver((entries) => {
