@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Damian Mathews · Automate the repetitive, boring, and costly</title>
 <meta name="description" content="Let's automate the repetitive, boring, or costly processes in your business together. I learn how your work gets done, build the AI systems to take it off your plate, and train your team to own them. Low cost, high ROI." />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -906,6 +907,19 @@
   @media (max-width: 720px) {
     .hero-orb { display: none; }
   }
+
+  /* ============================================================
+     V8 — HERO TEXT BLOCK CONSTRAINED TO LEFT HALF
+     Direct children of .hero .wrap (eyebrow, h1, sub, actions)
+     capped so they never overlap the right-side orb. .scroll-cue
+     sits outside .wrap so it's unaffected and stays centered.
+     ============================================================ */
+  .hero .wrap > * {
+    max-width: min(720px, 55vw);
+  }
+  @media (max-width: 900px) {
+    .hero .wrap > * { max-width: 100%; }
+  }
 </style>
 </head>
 <body>
@@ -1117,25 +1131,25 @@
       <div class="process-grid">
         <div class="process-step">
           <div class="process-marker">01</div>
-          <div class="process-label">Week 1</div>
+          <div class="process-label">Phase 1</div>
           <div class="process-title">Discovery</div>
           <div class="process-desc">Sit in. Shadow. Watch the work. Ask questions. Read your docs. Look at your stack. By the end I know how things actually run.</div>
         </div>
         <div class="process-step">
           <div class="process-marker">02</div>
-          <div class="process-label">Week 2</div>
+          <div class="process-label">Phase 2</div>
           <div class="process-title">Map</div>
           <div class="process-desc">Written report of where AI fits. Each opportunity gets a priority, an effort estimate, and a sketch of what the build looks like.</div>
         </div>
         <div class="process-step">
           <div class="process-marker">03</div>
-          <div class="process-label">Weeks 3 to 8</div>
+          <div class="process-label">Phase 3</div>
           <div class="process-title">Build</div>
           <div class="process-desc">Pick the highest-leverage thing. Build it. Test with real users. Iterate. Ship something that gets used Monday and saves time by Friday.</div>
         </div>
         <div class="process-step">
           <div class="process-marker">04</div>
-          <div class="process-label">Week 9</div>
+          <div class="process-label">Phase 4</div>
           <div class="process-title">Hand off</div>
           <div class="process-desc">Train the team. Write the docs. Make sure the people who'll own the thing can run it without me. Set up metrics so we can see if it's working.</div>
         </div>
