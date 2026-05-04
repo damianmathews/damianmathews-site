@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <radialGradient id="glow" cx="85%" cy="20%" r="60%">
+      <stop offset="0%" stop-color="#db6f2c" stop-opacity="0.35"/>
+      <stop offset="40%" stop-color="#7a3a16" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#0a0806" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="orb" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#ffc890"/>
+      <stop offset="35%" stop-color="#db6f2c"/>
+      <stop offset="80%" stop-color="#5e2a10"/>
+      <stop offset="100%" stop-color="#180c05"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0a0806"/>
+
+  <!-- Atmospheric glow -->
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Faint orb in upper right -->
+  <circle cx="1020" cy="170" r="120" fill="url(#orb)" opacity="0.55"/>
+  <circle cx="1020" cy="170" r="160" fill="none" stroke="#db6f2c" stroke-width="1" stroke-opacity="0.18"/>
+  <circle cx="1020" cy="170" r="200" fill="none" stroke="#db6f2c" stroke-width="1" stroke-opacity="0.10" stroke-dasharray="2 6"/>
+
+  <!-- Mark dot -->
+  <circle cx="100" cy="260" r="8" fill="#db6f2c"/>
+
+  <!-- Damian Mathews -->
+  <text x="130" y="290"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-weight="700"
+        font-size="118"
+        fill="#db6f2c"
+        letter-spacing="-3">Damian Mathews</text>
+
+  <!-- Automation Consultation -->
+  <text x="130" y="370"
+        font-family="Helvetica Neue, Helvetica, Arial, sans-serif"
+        font-weight="400"
+        font-size="44"
+        fill="#ece2cb"
+        letter-spacing="0.5">Automation Consultation</text>
+
+  <!-- Bottom bar accent -->
+  <rect x="100" y="540" width="80" height="2" fill="#db6f2c"/>
+  <text x="100" y="580"
+        font-family="Menlo, Monaco, monospace"
+        font-weight="400"
+        font-size="22"
+        fill="#5d5546"
+        letter-spacing="3">BOSTON · REMOTE · AI BUILDS</text>
+</svg>
