@@ -855,16 +855,15 @@
   .scroll-cue { bottom: 32px; }
 
   /* ============================================================
-     V7 — HERO ALIGNED WITH NAV
-     Use the exact same wrap as the nav (max-width 1240, margin auto,
-     padding 40) so hero text starts at the same x as DAMIAN MATHEWS.
-     Widen h1 so it fits on 2 lines. Position orb in the right column.
+     V9 — HERO ALIGNED WITH NAV (bulletproof, !important to defeat cache)
+     Identical max-width / margin / padding as the nav's .wrap so
+     hero text starts at the exact same x as DAMIAN MATHEWS.
      ============================================================ */
 
-  .hero .wrap {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 0 40px;
+  body header.hero .wrap {
+    max-width: 1240px !important;
+    margin: 0 auto !important;
+    padding: 0 40px !important;
   }
   .hero h1 { max-width: min(820px, 60vw); }
   .hero-sub { max-width: 480px; }
