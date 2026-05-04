@@ -664,19 +664,7 @@
     to { transform: translateY(0); opacity: 1; }
   }
 
-  /* HERO LAYOUT — anchor text to the left, leave room for orb */
-  .hero .wrap {
-    max-width: none;
-    padding-left: clamp(32px, 6vw, 88px);
-    padding-right: clamp(24px, 4vw, 64px);
-  }
-  .hero h1 { max-width: min(1080px, 78vw); }
-  .hero-sub { max-width: 640px; }
-  .hero-meta, .hero-actions { max-width: 1080px; }
-  @media (max-width: 720px) {
-    .hero .wrap { padding-left: 24px; padding-right: 24px; }
-    .hero h1 { max-width: 100%; }
-  }
+  /* (V3 hero wrap rule removed — superseded by V7 below) */
 
   /* SPECTRUM — proper alignment + bigger hit area + smoother drag */
   .spectrum-track {
@@ -784,12 +772,7 @@
   h1 .italic { font-weight: 300; font-style: italic; color: var(--ink-soft); letter-spacing: -0.03em; }
   h1 .copper { font-weight: 300; font-style: italic; color: var(--copper); letter-spacing: -0.03em; }
 
-  /* Push hero hard against the left edge */
-  .hero .wrap {
-    padding-left: clamp(20px, 2.4vw, 40px);
-    padding-right: clamp(20px, 4vw, 64px);
-  }
-  .hero h1 { max-width: min(1100px, 84vw); }
+  /* (V4 hero wrap rule removed — superseded by V7 below) */
 
   /* Below-hero type — smaller, calmer */
   h2 {
@@ -830,13 +813,7 @@
      ============================================================ */
 
   .hero { padding: 110px 0 90px; align-items: center; }
-
-  .hero .wrap {
-    max-width: none;
-    margin: 0;
-    padding-left: clamp(20px, 1.6vw, 28px);
-    padding-right: clamp(20px, 3vw, 48px);
-  }
+  /* (V5 hero wrap rule removed — superseded by V7 below) */
 
   h1 {
     font-size: clamp(38px, 4.4vw, 68px);
