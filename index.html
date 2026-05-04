@@ -875,6 +875,38 @@
 
   /* Scroll cue — pull in tighter */
   .scroll-cue { bottom: 32px; }
+
+  /* ============================================================
+     V6 — HERO BALANCE
+     Center hero in a wide wrap so it shares the nav rail (no longer
+     pinned to the viewport edge). Bring the orb inboard so the empty
+     middle band closes up.
+     ============================================================ */
+
+  .hero .wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 clamp(24px, 3vw, 48px);
+  }
+  .hero h1 { max-width: min(700px, 58vw); }
+  .hero-sub { max-width: 500px; }
+  .hero-meta, .hero-actions { max-width: 700px; }
+
+  /* Orb pulled in tight to the text column on wide screens */
+  .hero-orb {
+    right: 2vw;
+    width: 54vw;
+    max-width: 700px;
+  }
+  @media (max-width: 1400px) {
+    .hero-orb { right: -8vw; width: 60vw; }
+  }
+  @media (max-width: 1180px) {
+    .hero-orb { right: -28vw; width: 75vw; }
+  }
+  @media (max-width: 720px) {
+    .hero-orb { display: none; }
+  }
 </style>
 </head>
 <body>
